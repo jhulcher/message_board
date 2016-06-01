@@ -1,0 +1,40 @@
+<div class="login_slogan">
+        Your life in pictures begins here
+      </div>
+      <form action="<%= users_url %>" method="post">
+        <%= auth_token_input %>
+          <input type="text"
+                 maxLength="10"
+                 class="login_username"
+                 name="user[username]"
+                 placeholder='New Username'
+                 value="">
+          <div class="bottom_pad"></div>
+          <input type="password"
+                   name="user[password]"
+                   placeholder='New Password'
+                   value=""
+                   class="bottom_pad">
+          <div class="bottom_pad"></div>
+          <input type="submit" value="Sign Up!" class="login">
+          <div class="bottom_pad"></div>
+          <div class="bottom_pad"></div>
+          <div class="bottom_pad"></div>
+          <div class="bottom_pad"></div>
+
+
+</form>
+          <div class="guest_pad"> </div>
+          <div class="login_text">
+
+            <div class="login_switch_div">
+              <div class="registered_text">
+                Already registered?
+              </div>
+              <div class="sign_up_link">
+                <%= link_to "Sign In!", new_session_url %>
+              </div>
+            </div>
+
+
+          </div>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Messageboard</title>
+
+
+  <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js">
+  </script>
+  <script
+    src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js">
+  </script>
+
+
+  <%= csrf_meta_tags %>
+
+</head>
+<body>
+
+<% if signed_in? %>
+    <script type="text/javascript">
+      window.current_user_id = <%= current_user.id %>;
+    </script>
+
+    <%= button_to "Log Out", session_url, :method => :delete %>
+
+<% end %>
+
+  <center>
+    <%= render "layouts/errors" %>
+    <%= yield %>
+  </center>
+</body>
+</html>
