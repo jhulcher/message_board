@@ -6,7 +6,7 @@ var ReactRouter = require('react-router');
 
 var Index = require("./components/index.jsx");
 var Thread = require("./components/thread.jsx");
-
+var NewThread = require("./components/new_thread.jsx");
 
 var Route = ReactRouter.Route;
 
@@ -28,6 +28,7 @@ var routes = (
   <Route path="/" component={ App } >
     <IndexRoute component={ Index } />
     <Route path="thread" component={ Thread } />
+    <Route path="new_thread" component={ NewThread } />
   </Route>
 );
 

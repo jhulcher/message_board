@@ -19,6 +19,6 @@ class SessionsController < ApplicationController
 
   def destroy
     sign_out
-    # render json: { status: "signed out" }
+    render json: { status: "signed out" }
   end
 end

@@ -50,7 +50,8 @@
 	var ReactRouter = __webpack_require__(184);
 	
 	var Index = __webpack_require__(235);
-	var Thread = __webpack_require__(236);
+	var Thread = __webpack_require__(237);
+	var NewThread = __webpack_require__(242);
 	
 	var Route = ReactRouter.Route;
 	
@@ -74,7 +75,8 @@
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: Index }),
-	  React.createElement(Route, { path: 'thread', component: Thread })
+	  React.createElement(Route, { path: 'thread', component: Thread }),
+	  React.createElement(Route, { path: 'new_thread', component: NewThread })
 	);
 	
 	ReactDOM.render(React.createElement(
@@ -19688,9 +19690,9 @@
 	      method: "GET",
 	      dataType: "json",
 	      success: function (response) {
-	        console.log(response);
+	        console.log("fetchIndex");
 	        ApiActions.receiveIndex(response);
-	        TopicStore.all();
+	        // TopicStore.all();
 	      }
 	    });
 	  },
@@ -19701,9 +19703,74 @@
 	      method: "GET",
 	      dataType: "json",
 	      success: function (response) {
-	        console.log(response);
+	        console.log("fetchThread");
 	        ApiActions.receiveThread(response);
-	        TopicStore.all();
+	        // TopicStore.all();
+	      }
+	    });
+	  },
+	
+	  createThread: function (callback, title, body) {
+	    $.ajax({
+	      url: "api/topics",
+	      method: "POST",
+	      dataType: "json",
+	      data: {
+	        topic: {
+	          title: title
+	        }
+	      },
+	      success: function (response) {
+	        console.log("createThread");
+	        ApiUtil.createFirstPost(callback, response.topic_id, body);
+	      }
+	    });
+	  },
+	
+	  createFirstPost: function (callback, id, body) {
+	    $.ajax({
+	      url: "/api/posts",
+	      method: "POST",
+	      dataType: "json",
+	      data: {
+	        post: {
+	          topic_id: id,
+	          body: body
+	        }
+	      },
+	      success: function (response) {
+	        // ApiUtil.fetchIndex();
+	        callback(response);
+	      }
+	    });
+	  },
+	
+	  createPost: function (id, body) {
+	    $.ajax({
+	      url: "/api/posts",
+	      method: "POST",
+	      dataType: "json",
+	      data: {
+	        post: {
+	          topic_id: id,
+	          body: body
+	        }
+	      },
+	      success: function (response) {
+	        console.log('createPost');
+	        ApiActions.receiveThread(response);
+	        // TopicStore.all();
+	      }
+	    });
+	  },
+	
+	  logOut: function () {
+	    $.ajax({
+	      url: "session",
+	      method: "DELETE",
+	      success: function (response) {
+	        console.log("logOut");
+	        window.location.href = "/";
 	      }
 	    });
 	  }
@@ -20084,14 +20151,6 @@
 	  _topics = topics;
 	};
 	
-	// TopicStore.find = function (id) {
-	//   for (var x = 0; x < _topics.length; x++) {
-	//     if (_topics[x].id === id) {
-	//       return _topics[x];
-	//     }
-	//   }
-	// };
-	
 	TopicStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case CONSTANTS.INDEX_RECEIVED:
@@ -20099,18 +20158,18 @@
 	      TopicStore.__emitChange();
 	      break;
 	    case CONSTANTS.THREAD_RECEIVED:
-	      resetTopics(payload.topics);
+	      resetTopics([payload.topics]);
 	      TopicStore.__emitChange();
 	      break;
 	  }
 	};
 	
 	TopicStore.all = function () {
-	  if (Array.isArray(_topics) === true) {
+	  if (_topics.length > 1) {
 	    console.log("array");
 	    return _topics.slice(0);
 	  } else {
-	    return [_topics];
+	    return _topics;
 	  }
 	};
 	
@@ -31334,6 +31393,7 @@
 	var ApiUtil = __webpack_require__(159);
 	var TopicStore = __webpack_require__(166);
 	var React = __webpack_require__(1);
+	var Nav = __webpack_require__(236);
 	var cur = window.current_user_id;
 	
 	var History = __webpack_require__(184).History;
@@ -31354,8 +31414,6 @@
 	    this.listener = TopicStore.addListener(function () {
 	      this.setState({ topics: TopicStore.all() });
 	    }.bind(this));
-	
-	    this.loadAmount = 7;
 	  },
 	
 	  componentWillUnmount: function () {
@@ -31363,17 +31421,17 @@
 	  },
 	
 	  handleThreadClick: function (id) {
-	    console.log(id);
 	    this.history.pushState(null, "thread", { id: id });
 	  },
 	
 	  render: function () {
 	    return React.createElement(
-	      "ul",
+	      "div",
 	      null,
+	      React.createElement(Nav, null),
 	      this.state.topics.map(function (topic) {
 	        return React.createElement(
-	          "li",
+	          "div",
 	          { key: topic.topic_id },
 	          React.createElement(
 	            "span",
@@ -31406,8 +31464,71 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(159);
+	var React = __webpack_require__(1);
+	
+	var History = __webpack_require__(184).History;
+	
+	var Nav = React.createClass({
+	  displayName: "Nav",
+	
+	
+	  mixins: [History],
+	
+	  goToIndex: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "/");
+	  },
+	
+	  goToNewThread: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "/new_thread");
+	  },
+	
+	  handleLogOut: function (e) {
+	    e.preventDefault();
+	    ApiUtil.logOut();
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      { className: "" },
+	      React.createElement(
+	        "span",
+	        { className: "",
+	          onClick: this.goToIndex },
+	        "Index"
+	      ),
+	      React.createElement(
+	        "span",
+	        { className: "",
+	          onClick: this.goToNewThread },
+	        "New Thread"
+	      ),
+	      React.createElement(
+	        "span",
+	        { className: "l",
+	          onClick: this.handleLogOut },
+	        "Sign Out"
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Nav;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
 	var TopicStore = __webpack_require__(166);
 	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(238);
+	var Nav = __webpack_require__(236);
+	
+	var History = __webpack_require__(184).History;
 	
 	var cur = window.current_user_id;
 	
@@ -31415,30 +31536,41 @@
 	  displayName: "Thread",
 	
 	
+	  mixins: [LinkedStateMixin, History],
+	
 	  getInitialState: function () {
-	    return { thread: [] };
+	    return { thread: [], content: "" };
 	  },
 	
 	  componentWillMount: function () {
 	    ApiUtil.fetchThread(parseInt(this.props.location.query.id));
 	
-	    this.listener = TopicStore.addListener(function () {
+	    this.threadListener = TopicStore.addListener(function () {
 	      this.setState({ thread: TopicStore.all() });
 	    }.bind(this));
 	  },
 	
 	  componentWillUnmount: function () {
-	    this.listener.remove();
+	    this.threadListener.remove();
+	  },
+	
+	  handlePost: function (e) {
+	    e.preventDefault();
+	
+	    ApiUtil.createPost(this.state.thread[0].topic_id, this.state.content);
+	
+	    this.setState({ content: "" });
 	  },
 	
 	  render: function () {
 	    return React.createElement(
-	      "ul",
+	      "div",
 	      null,
+	      React.createElement(Nav, null),
 	      this.state.thread.map(function (post) {
 	        return React.createElement(
 	          "div",
-	          { key: post.topic_id },
+	          { key: 999 },
 	          React.createElement(
 	            "span",
 	            null,
@@ -31453,7 +31585,7 @@
 	          post.posts.map(function (post) {
 	            return React.createElement(
 	              "div",
-	              { key: post.post_id },
+	              { key: post.post_id + post.topic_id },
 	              React.createElement(
 	                "span",
 	                null,
@@ -31471,15 +31603,327 @@
 	                post.body
 	              )
 	            );
-	          })
+	          }),
+	          React.createElement(
+	            "form",
+	            { method: "POST",
+	              onSubmit: this.handlePost },
+	            React.createElement("input", { type: "text",
+	              maxLength: "1000",
+	              className: "",
+	              placeholder: "Add a post",
+	              valueLink: this.linkState('content') })
+	          )
 	        );
-	      })
+	      }.bind(this))
 	    );
 	  }
 	
 	});
 	
 	module.exports = Thread;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(239);
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	var ReactLink = __webpack_require__(240);
+	var ReactStateSetters = __webpack_require__(241);
+	
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+	
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+	
+	var React = __webpack_require__(2);
+	
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+	
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+	
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+	
+	module.exports = ReactLink;
+
+/***/ },
+/* 241 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+	
+	'use strict';
+	
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+	
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+	
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+	
+	module.exports = ReactStateSetters;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var TopicStore = __webpack_require__(166);
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(238);
+	var Nav = __webpack_require__(236);
+	
+	var History = __webpack_require__(184).History;
+	
+	var cur = window.current_user_id;
+	
+	var NewThread = React.createClass({
+	  displayName: "NewThread",
+	
+	
+	  mixins: [LinkedStateMixin, History],
+	
+	  getInitialState: function () {
+	    return { thread: [], title: "", body: "" };
+	  },
+	
+	  componentWillMount: function () {
+	
+	    this.listener = TopicStore.addListener(function () {
+	      this.setState({ thread: TopicStore.all() });
+	    }.bind(this));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	
+	  threadCreated: function () {
+	    this.history.push("/");
+	  },
+	
+	  handleCreate: function (e) {
+	    e.preventDefault();
+	    ApiUtil.createThread(this.threadCreated, this.state.title, this.state.body);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(Nav, null),
+	      React.createElement(
+	        "form",
+	        { method: "POST",
+	          onSubmit: this.handleCreate },
+	        React.createElement("input", { type: "text",
+	          maxLength: "50",
+	          className: "",
+	          placeholder: "Add a post",
+	          valueLink: this.linkState('title') }),
+	        React.createElement("input", { type: "text",
+	          maxLength: "1000",
+	          className: "",
+	          placeholder: "Add a post",
+	          valueLink: this.linkState('body') }),
+	        React.createElement("button", { type: "submit" })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = NewThread;
 
 /***/ }
 /******/ ]);

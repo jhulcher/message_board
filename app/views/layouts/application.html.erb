@@ -12,6 +12,7 @@
     src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js">
   </script>
 
+  <%= stylesheet_link_tag 'application', media: 'all' %>
 
   <%= csrf_meta_tags %>
 
@@ -22,8 +23,6 @@
     <script type="text/javascript">
       window.current_user_id = <%= current_user.id %>;
     </script>
-
-    <%= button_to "Log Out", session_url, :method => :delete %>
 
 <% end %>
 

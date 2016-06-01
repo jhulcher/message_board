@@ -10,14 +10,6 @@ var resetTopics = function (topics) {
   _topics = topics;
 };
 
-// TopicStore.find = function (id) {
-//   for (var x = 0; x < _topics.length; x++) {
-//     if (_topics[x].id === id) {
-//       return _topics[x];
-//     }
-//   }
-// };
-
 TopicStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case CONSTANTS.INDEX_RECEIVED:
@@ -25,18 +17,18 @@ TopicStore.__onDispatch = function (payload) {
       TopicStore.__emitChange();
       break;
     case CONSTANTS.THREAD_RECEIVED:
-      resetTopics(payload.topics);
+      resetTopics([payload.topics]);
       TopicStore.__emitChange();
       break;
   }
 };
 
 TopicStore.all = function () {
-  if (Array.isArray(_topics) === true) {
+  if (_topics.length > 1) {
     console.log("array");
     return _topics.slice(0);
   } else {
-    return [_topics];
+    return _topics;
   }
 };
 
