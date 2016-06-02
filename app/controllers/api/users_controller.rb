@@ -2,7 +2,7 @@ class Api::UsersController < ApplicationController
   before_filter :require_signed_in!
 
   def index
-    @users = User.all
+    @users = current_users
     # render "json"
   end
 
