@@ -9,6 +9,7 @@ json.posts @post.topic.posts do |post|
   json.author post.user.username
   json.user_id post.user_id
   json.post_id post.id
+  json.topic_id post.topic_id
   json.body post.body
   json.created_at post.created_at
   json.updated_at post.updated_at
