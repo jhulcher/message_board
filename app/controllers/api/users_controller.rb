@@ -15,13 +15,15 @@ class Api::UsersController < ApplicationController
 
     if params[:user][:location]
       @user.location = params[:user][:location]
+      @user.save!
     end
 
     if params[:user][:about_me]
       @user.about_me = params[:user][:about_me]
+      @user.save!
     end
-    
-    @user.save!
+
+    @user
   end
 
   private

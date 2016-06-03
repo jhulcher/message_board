@@ -29,7 +29,7 @@ var UpdateProfile = React.createClass({
   handleUpdateUser: function (e) {
     e.preventDefault();
     ApiUtil.patchUser(cur, this.state.location, this.state.about_me);
-    this.history.pushState(null, "/" );
+    // this.history.pushState(null, "/" );
   },
 
   componentWillUnmount: function () {
