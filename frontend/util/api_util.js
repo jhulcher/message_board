@@ -29,6 +29,66 @@ var ApiUtil = {
     });
   },
 
+  fetchUsers: function () {
+    $.ajax({
+      url: "/api/users",
+      method: "GET",
+      dataType: "json",
+      success: function (response) {
+        console.log(response);
+        ApiActions.receiveUsers(response);
+      }
+    });
+  },
+
+  searchPosts: function (search_terms) {
+    $.ajax({
+      url: "api/posts",
+      method: "GET",
+      dataType: "json",
+      data: {
+        post: {
+          body: search_terms
+        }
+      },
+      success: function (response) {
+        console.log(response);
+        ApiActions.receiveSearchResults(response);
+      }
+    });
+  },
+
+  fetchUser: function (id) {
+    $.ajax({
+      url: "/api/users/" + id,
+      method: "GET",
+      dataType: "json",
+      success: function (response) {
+        console.log(response);
+        ApiActions.receiveUser(response);
+      }
+    });
+  },
+
+  patchUser: function (id, location, about_me) {
+    console.log(id);
+    $.ajax({
+      url: "api/users/" + id,
+      method: "PATCH",
+      dataType: "json",
+      data: {
+        user: {
+          location: location,
+          about_me: about_me
+        }
+      },
+      success: function (response) {
+        console.log(response);
+        ApiActions.receiveUser(response);
+      }
+    });
+  },
+
   createThread: function (callback, title, body) {
     $.ajax({
       url: "api/topics",

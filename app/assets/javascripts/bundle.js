@@ -49,9 +49,12 @@
 	var ApiUtil = __webpack_require__(159);
 	var ReactRouter = __webpack_require__(184);
 	
+	var User = __webpack_require__(245);
 	var Index = __webpack_require__(235);
 	var Thread = __webpack_require__(237);
 	var NewThread = __webpack_require__(242);
+	var SearchResults = __webpack_require__(246);
+	var UpdateProfile = __webpack_require__(248);
 	
 	var Route = ReactRouter.Route;
 	
@@ -76,7 +79,10 @@
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: Index }),
 	  React.createElement(Route, { path: 'thread', component: Thread }),
-	  React.createElement(Route, { path: 'new_thread', component: NewThread })
+	  React.createElement(Route, { path: 'new_thread', component: NewThread }),
+	  React.createElement(Route, { path: 'user', component: User }),
+	  React.createElement(Route, { path: 'search_results', component: SearchResults }),
+	  React.createElement(Route, { path: 'edit_profile', component: UpdateProfile })
 	);
 	
 	ReactDOM.render(React.createElement(
@@ -19710,6 +19716,66 @@
 	    });
 	  },
 	
+	  fetchUsers: function () {
+	    $.ajax({
+	      url: "/api/users",
+	      method: "GET",
+	      dataType: "json",
+	      success: function (response) {
+	        console.log(response);
+	        ApiActions.receiveUsers(response);
+	      }
+	    });
+	  },
+	
+	  searchPosts: function (search_terms) {
+	    $.ajax({
+	      url: "api/posts",
+	      method: "GET",
+	      dataType: "json",
+	      data: {
+	        post: {
+	          body: search_terms
+	        }
+	      },
+	      success: function (response) {
+	        console.log(response);
+	        ApiActions.receiveSearchResults(response);
+	      }
+	    });
+	  },
+	
+	  fetchUser: function (id) {
+	    $.ajax({
+	      url: "/api/users/" + id,
+	      method: "GET",
+	      dataType: "json",
+	      success: function (response) {
+	        console.log(response);
+	        ApiActions.receiveUser(response);
+	      }
+	    });
+	  },
+	
+	  patchUser: function (id, location, about_me) {
+	    console.log(id);
+	    $.ajax({
+	      url: "api/users/" + id,
+	      method: "PATCH",
+	      dataType: "json",
+	      data: {
+	        user: {
+	          location: location,
+	          about_me: about_me
+	        }
+	      },
+	      success: function (response) {
+	        console.log(response);
+	        ApiActions.receiveUser(response);
+	      }
+	    });
+	  },
+	
 	  createThread: function (callback, title, body) {
 	    $.ajax({
 	      url: "api/topics",
@@ -19801,7 +19867,29 @@
 	      actionType: Constants.THREAD_RECEIVED,
 	      topics: topic
 	    });
+	  },
+	
+	  receiveUsers: function (users) {
+	    AppDispatcher.dispatch({
+	      actionType: Constants.USERS_RECEIVED,
+	      users: users
+	    });
+	  },
+	
+	  receiveUser: function (user) {
+	    AppDispatcher.dispatch({
+	      actionType: Constants.USER_RECEIVED,
+	      user: user
+	    });
+	  },
+	
+	  receiveSearchResults: function (results) {
+	    AppDispatcher.dispatch({
+	      actionType: Constants.SEARCH_RESULTS_RECEIVED,
+	      search_results: results
+	    });
 	  }
+	
 	};
 	
 	module.exports = ApiActions;
@@ -20129,7 +20217,10 @@
 	var Constants = {
 	
 	  INDEX_RECEIVED: "INDEX_RECEIVED",
-	  THREAD_RECEIVED: "THREAD_RECEIVED"
+	  THREAD_RECEIVED: "THREAD_RECEIVED",
+	  USERS_RECEIVED: "USERS_RECEIVED",
+	  USER_RECEIVED: "USER_RECEIVED",
+	  SEARCH_RESULTS_RECEIVED: "SEARCH_RESULTS_RECEIVED"
 	
 	};
 	
@@ -31392,8 +31483,12 @@
 
 	var ApiUtil = __webpack_require__(159);
 	var TopicStore = __webpack_require__(166);
+	var UsersStore = __webpack_require__(243);
 	var React = __webpack_require__(1);
 	var Nav = __webpack_require__(236);
+	var ActiveUsers = __webpack_require__(244);
+	var LinkedStateMixin = __webpack_require__(238);
+	
 	var cur = window.current_user_id;
 	
 	var History = __webpack_require__(184).History;
@@ -31402,10 +31497,10 @@
 	  displayName: "Index",
 	
 	
-	  mixins: [History],
+	  mixins: [LinkedStateMixin, History],
 	
 	  getInitialState: function () {
-	    return { topics: [] };
+	    return { topics: [], users: [], search_terms: "" };
 	  },
 	
 	  componentWillMount: function () {
@@ -31414,14 +31509,25 @@
 	    this.listener = TopicStore.addListener(function () {
 	      this.setState({ topics: TopicStore.all() });
 	    }.bind(this));
+	
+	    ApiUtil.fetchUsers();
+	
+	    this.usersListener = UsersStore.addListener(function () {
+	      this.setState({ users: UserStore.all() });
+	    }.bind(this));
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.listener.remove();
+	    this.usersListener.remove();
 	  },
 	
 	  handleThreadClick: function (id) {
 	    this.history.pushState(null, "thread", { id: id });
+	  },
+	
+	  handleUserClick: function (id) {
+	    this.history.pushState(null, "user", { id: id });
 	  },
 	
 	  render: function () {
@@ -31435,7 +31541,7 @@
 	          { key: topic.topic_id },
 	          React.createElement(
 	            "span",
-	            null,
+	            { onClick: this.handleUserClick.bind(null, topic.user_id) },
 	            topic.author
 	          ),
 	          "---",
@@ -31451,7 +31557,8 @@
 	            topic.created_at
 	          )
 	        );
-	      }.bind(this))
+	      }.bind(this)),
+	      React.createElement(ActiveUsers, { users: this.state.users })
 	    );
 	  }
 	
@@ -31464,15 +31571,20 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(159);
+	var LinkedStateMixin = __webpack_require__(238);
 	var React = __webpack_require__(1);
 	
 	var History = __webpack_require__(184).History;
 	
 	var Nav = React.createClass({
-	  displayName: "Nav",
+	  displayName: 'Nav',
 	
 	
-	  mixins: [History],
+	  mixins: [History, LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return { search_terms: "" };
+	  },
 	
 	  goToIndex: function (e) {
 	    e.preventDefault();
@@ -31489,27 +31601,46 @@
 	    ApiUtil.logOut();
 	  },
 	
+	  handleSearch: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "search_results", { search_terms: this.state.search_terms });
+	  },
+	
 	  render: function () {
 	    return React.createElement(
-	      "div",
-	      { className: "" },
+	      'div',
+	      { className: '' },
 	      React.createElement(
-	        "span",
-	        { className: "",
+	        'span',
+	        { className: '',
 	          onClick: this.goToIndex },
-	        "Index"
+	        'Index'
 	      ),
 	      React.createElement(
-	        "span",
-	        { className: "",
+	        'span',
+	        { className: '',
 	          onClick: this.goToNewThread },
-	        "New Thread"
+	        'New Thread'
 	      ),
 	      React.createElement(
-	        "span",
-	        { className: "l",
+	        'span',
+	        null,
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.handleSearch,
+	            style: { display: "inline" } },
+	          React.createElement('input', { type: 'text',
+	            maxLength: '50',
+	            className: '',
+	            placeholder: 'Search',
+	            valueLink: this.linkState('search_terms') })
+	        )
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'l',
 	          onClick: this.handleLogOut },
-	        "Sign Out"
+	        'Sign Out'
 	      )
 	    );
 	  }
@@ -31924,6 +32055,386 @@
 	});
 	
 	module.exports = NewThread;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(167).Store;
+	var AppDispatcher = __webpack_require__(161);
+	var CONSTANTS = __webpack_require__(165);
+	
+	var _users = [];
+	
+	var UserStore = new Store(AppDispatcher);
+	
+	var resetUsers = function (users) {
+	  _users = users;
+	};
+	
+	UserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case CONSTANTS.USERS_RECEIVED:
+	      resetUsers(payload.users);
+	      UserStore.__emitChange();
+	      break;
+	    case CONSTANTS.USER_RECEIVED:
+	      resetUsers([payload.user]);
+	      UserStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	UserStore.all = function () {
+	  if (_users.length > 1) {
+	    console.log("array");
+	    return _users.slice(0);
+	  } else {
+	    return _users;
+	  }
+	};
+	
+	window.UserStore = UserStore;
+	
+	module.exports = UserStore;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var React = __webpack_require__(1);
+	
+	var History = __webpack_require__(184).History;
+	
+	var ActiveUsers = React.createClass({
+	  displayName: "ActiveUsers",
+	
+	
+	  mixins: [History],
+	
+	  handleUserClick: function (id) {
+	    this.history.pushState(null, "user", { id: id });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "span",
+	        null,
+	        "Active Users:"
+	      ),
+	      this.props.users.map(function (user) {
+	        return React.createElement(
+	          "span",
+	          { key: user.username,
+	            onClick: this.handleUserClick.bind(null, user.id) },
+	          user.username
+	        );
+	      }.bind(this))
+	    );
+	  }
+	
+	});
+	
+	module.exports = ActiveUsers;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var TopicStore = __webpack_require__(166);
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(238);
+	var Nav = __webpack_require__(236);
+	var UserStore = __webpack_require__(243);
+	
+	var History = __webpack_require__(184).History;
+	
+	var cur = window.current_user_id;
+	
+	var Thread = React.createClass({
+	  displayName: "Thread",
+	
+	
+	  mixins: [LinkedStateMixin, History],
+	
+	  getInitialState: function () {
+	    return { user: [] };
+	  },
+	
+	  componentWillMount: function () {
+	    ApiUtil.fetchUser(parseInt(this.props.location.query.id));
+	
+	    this.listener = UserStore.addListener(function () {
+	      this.setState({ user: UserStore.all() });
+	    }.bind(this));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(Nav, null),
+	      this.state.user.map(function (user) {
+	        return React.createElement(
+	          "div",
+	          { key: "username" },
+	          React.createElement(
+	            "div",
+	            null,
+	            user.username
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            user.user_since
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            user.post_count
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            user.location
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            user.about_me
+	          )
+	        );
+	      })
+	    );
+	  }
+	
+	});
+	
+	module.exports = Thread;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(238);
+	var Nav = __webpack_require__(236);
+	var SearchResultsStore = __webpack_require__(247);
+	
+	var History = __webpack_require__(184).History;
+	
+	var cur = window.current_user_id;
+	
+	var SearchResults = React.createClass({
+	  displayName: "SearchResults",
+	
+	
+	  mixins: [LinkedStateMixin, History],
+	
+	  getInitialState: function () {
+	    return { posts: [] };
+	  },
+	
+	  componentWillMount: function () {
+	    ApiUtil.searchPosts(this.props.location.query.search_terms);
+	
+	    this.listener = SearchResultsStore.addListener(function () {
+	      this.setState({ posts: SearchResultsStore.all() });
+	    }.bind(this));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(Nav, null),
+	      this.state.posts.map(function (post) {
+	        return React.createElement(
+	          "div",
+	          { key: post.body },
+	          React.createElement(
+	            "span",
+	            null,
+	            post.username
+	          ),
+	          React.createElement(
+	            "span",
+	            null,
+	            post.topic_id
+	          ),
+	          React.createElement(
+	            "span",
+	            null,
+	            post.created_at
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            post.body
+	          )
+	        );
+	      }.bind(this))
+	    );
+	  }
+	
+	});
+	
+	module.exports = SearchResults;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(167).Store;
+	var AppDispatcher = __webpack_require__(161);
+	var CONSTANTS = __webpack_require__(165);
+	
+	var _search_results = [];
+	
+	var SearchResultsStore = new Store(AppDispatcher);
+	
+	var resetSearchResults = function (search_results) {
+	  _search_results = search_results;
+	};
+	
+	SearchResultsStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case CONSTANTS.SEARCH_RESULTS_RECEIVED:
+	      resetSearchResults(payload.search_results);
+	      SearchResultsStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	SearchResultsStore.all = function () {
+	  if (_search_results.length > 1) {
+	    console.log("array");
+	    return _search_results.slice(0);
+	  } else {
+	    return _search_results;
+	  }
+	};
+	
+	window.SearchResultsStore = SearchResultsStore;
+	
+	module.exports = SearchResultsStore;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var LinkedStateMixin = __webpack_require__(238);
+	var React = __webpack_require__(1);
+	var cur = window.current_user_id;
+	var Nav = __webpack_require__(236);
+	var UserStore = __webpack_require__(243);
+	
+	var History = __webpack_require__(184).History;
+	
+	var UpdateProfile = React.createClass({
+	  displayName: 'UpdateProfile',
+	
+	
+	  mixins: [History, LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return { user: [], location: "", about_me: "" };
+	  },
+	
+	  componentWillMount: function () {
+	    ApiUtil.fetchUser(cur);
+	
+	    this.listener = UserStore.addListener(function () {
+	      this.setState({ user: UserStore.all() });
+	    }.bind(this));
+	  },
+	
+	  handleUpdateUser: function (e) {
+	    e.preventDefault();
+	    ApiUtil.patchUser(cur, this.state.location, this.state.about_me);
+	    this.history.pushState(null, "/");
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Nav, null),
+	      this.state.user.map(function (user) {
+	        return React.createElement(
+	          'div',
+	          { key: 'user.username' },
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'div',
+	              null,
+	              user.username
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              user.user_since
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              user.post_count
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              user.location
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              user.about_me
+	            )
+	          ),
+	          React.createElement(
+	            'form',
+	            { method: 'POST', onSubmit: this.handleUpdateUser },
+	            React.createElement('input', { type: 'text',
+	              maxLength: '30',
+	              className: '',
+	              placeholder: 'Update Location',
+	              valueLink: this.linkState('location') }),
+	            React.createElement('input', { type: 'text',
+	              maxLength: '200',
+	              className: '',
+	              placeholder: 'Update About Me',
+	              valueLink: this.linkState('about_me') }),
+	            React.createElement('button', { type: 'submit' })
+	          )
+	        );
+	      }.bind(this))
+	    );
+	  }
+	
+	});
+	
+	module.exports = UpdateProfile;
 
 /***/ }
 /******/ ]);
