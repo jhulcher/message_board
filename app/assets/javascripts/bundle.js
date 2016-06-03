@@ -31822,7 +31822,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: '' },
+	      { className: 'nav' },
 	      React.createElement(
 	        'span',
 	        { className: '',
@@ -31966,27 +31966,33 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      null,
+	      { className: "full-page" },
 	      React.createElement(Nav, null),
-	      this.state.topics.map(function (topic) {
+	      this.state.topics.map(function (topic, idx) {
+	        if ((idx + 2) % 2 === 0) {
+	          var colorClass = "list-item beige";
+	        } else {
+	          colorClass = "list-item";
+	        }
 	        return React.createElement(
 	          "div",
-	          { key: topic.topic_id },
+	          { className: colorClass,
+	            key: topic.topic_id },
 	          React.createElement(
 	            "span",
-	            { onClick: this.handleUserClick.bind(null, topic.user_id) },
+	            { className: "name-column",
+	              onClick: this.handleUserClick.bind(null, topic.user_id) },
 	            topic.author
 	          ),
-	          "---",
 	          React.createElement(
 	            "span",
-	            { onClick: this.handleThreadClick.bind(null, topic.topic_id) },
+	            { className: "title-column",
+	              onClick: this.handleThreadClick.bind(null, topic.topic_id) },
 	            topic.title
 	          ),
-	          "---",
 	          React.createElement(
 	            "span",
-	            null,
+	            { className: "date-column" },
 	            topic.created_at
 	          )
 	        );
@@ -32398,12 +32404,12 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { key: 'editprofile' },
 	      React.createElement(Nav, null),
 	      this.state.user.map(function (user) {
 	        return React.createElement(
 	          'div',
-	          { key: 'user.username' },
+	          { key: 'editprofile' },
 	          React.createElement(
 	            'div',
 	            null,

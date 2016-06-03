@@ -41,7 +41,7 @@ var Nav = React.createClass({
 
   render: function () {
     return (
-        <div className="">
+        <div className="nav">
 
           <span className=""
                 onClick={this.goToIndex}>

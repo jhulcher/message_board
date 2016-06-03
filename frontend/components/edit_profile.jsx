@@ -38,29 +38,29 @@ var UpdateProfile = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <div key="editprofile">
         <Nav></Nav>
         {
           this.state.user.map (function (user) {
             return (
-              <div key="user.username">
-              <div>
+              <div key="editprofile">
                 <div>
-                  { user.username }
+                  <div>
+                    { user.username }
+                  </div>
+                  <div>
+                    { user.user_since }
+                  </div>
+                  <div>
+                    { user.post_count }
+                  </div>
+                  <div>
+                    { user.location }
+                  </div>
+                  <div>
+                    { user.about_me }
+                  </div>
                 </div>
-                <div>
-                  { user.user_since }
-                </div>
-                <div>
-                  { user.post_count }
-                </div>
-                <div>
-                  { user.location }
-                </div>
-                <div>
-                  { user.about_me }
-                </div>
-              </div>
                 <form method="POST" onSubmit={this.handleUpdateUser}>
                   <input type="text"
                          maxLength="30"

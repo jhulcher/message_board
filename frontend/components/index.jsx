@@ -50,21 +50,27 @@ var Index = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <div className="full-page">
         <Nav></Nav>
           {
-            this.state.topics.map (function (topic) {
+            this.state.topics.map (function (topic, idx) {
+              if ((idx + 2) % 2 === 0) {
+                var colorClass = "list-item beige";
+              } else {
+                    colorClass = "list-item";
+              }
               return (
-                <div key={topic.topic_id}>
-                  <span onClick={this.handleUserClick.bind(null, topic.user_id)}>
+                <div  className={colorClass}
+                      key={topic.topic_id}>
+                  <span className="name-column"
+                        onClick={this.handleUserClick.bind(null, topic.user_id)}>
                     {topic.author}
                   </span>
-                  ---
-                  <span onClick={this.handleThreadClick.bind(null, topic.topic_id)}>
+                  <span className="title-column"
+                        onClick={this.handleThreadClick.bind(null, topic.topic_id)}>
                     { topic.title }
                   </span>
-                  ---
-                  <span>
+                  <span className="date-column">
                     {topic.created_at}
                   </span>
                 </div>
