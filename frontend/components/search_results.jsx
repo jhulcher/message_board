@@ -4,14 +4,10 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var Nav = require("./nav.jsx");
 var SearchResultsStore = require("../stores/search_results.js");
 
-var History = require("react-router").History;
-
 
 var cur = window.current_user_id;
 
 var SearchResults = React.createClass({
-
-  mixins: [LinkedStateMixin, History],
 
   getInitialState: function () {
     return (
@@ -26,6 +22,14 @@ var SearchResults = React.createClass({
       this.setState({ posts: SearchResultsStore.all() });
     }.bind(this));
 
+  },
+
+  componentWillReceiveProps: function () {
+    ApiUtil.searchPosts(this.props.location.query.search_terms);
+
+    this.listener = SearchResultsStore.addListener(function () {
+      this.setState({ posts: SearchResultsStore.all() });
+    }.bind(this));
   },
 
   componentWillUnmount: function () {

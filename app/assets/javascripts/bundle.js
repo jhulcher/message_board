@@ -19696,7 +19696,6 @@
 	      method: "GET",
 	      dataType: "json",
 	      success: function (response) {
-	        console.log("fetchIndex");
 	        ApiActions.receiveIndex(response);
 	        // TopicStore.all();
 	      }
@@ -19709,7 +19708,6 @@
 	      method: "GET",
 	      dataType: "json",
 	      success: function (response) {
-	        console.log("fetchThread");
 	        ApiActions.receiveThread(response);
 	        // TopicStore.all();
 	      }
@@ -19722,7 +19720,6 @@
 	      method: "GET",
 	      dataType: "json",
 	      success: function (response) {
-	        console.log(response);
 	        ApiActions.receiveUsers(response);
 	      }
 	    });
@@ -19739,7 +19736,6 @@
 	        }
 	      },
 	      success: function (response) {
-	        console.log(response);
 	        ApiActions.receiveSearchResults(response);
 	      }
 	    });
@@ -19770,7 +19766,6 @@
 	        }
 	      },
 	      success: function (response) {
-	        console.log(response);
 	        ApiActions.receiveUser(response);
 	      }
 	    });
@@ -19787,7 +19782,6 @@
 	        }
 	      },
 	      success: function (response) {
-	        console.log("createThread");
 	        ApiUtil.createFirstPost(callback, response.topic_id, body);
 	      }
 	    });
@@ -19823,7 +19817,6 @@
 	        }
 	      },
 	      success: function (response) {
-	        console.log('createPost');
 	        ApiActions.receiveThread(response);
 	        // TopicStore.all();
 	      }
@@ -19835,7 +19828,6 @@
 	      url: "session",
 	      method: "DELETE",
 	      success: function (response) {
-	        console.log("logOut");
 	        window.location.href = "/";
 	      }
 	    });
@@ -32017,7 +32009,7 @@
 	  mixins: [History],
 	
 	  handleUserClick: function (id) {
-	    this.history.pushState(null, "user", { id: id });
+	    this.history.pushState(null, "user/" + id, { id: id });
 	  },
 	
 	  render: function () {
@@ -32231,21 +32223,25 @@
 	var Nav = __webpack_require__(240);
 	var SearchResultsStore = __webpack_require__(247);
 	
-	var History = __webpack_require__(184).History;
-	
 	var cur = window.current_user_id;
 	
 	var SearchResults = React.createClass({
 	  displayName: "SearchResults",
 	
 	
-	  mixins: [LinkedStateMixin, History],
-	
 	  getInitialState: function () {
 	    return { posts: [] };
 	  },
 	
 	  componentWillMount: function () {
+	    ApiUtil.searchPosts(this.props.location.query.search_terms);
+	
+	    this.listener = SearchResultsStore.addListener(function () {
+	      this.setState({ posts: SearchResultsStore.all() });
+	    }.bind(this));
+	  },
+	
+	  componentWillReceiveProps: function () {
 	    ApiUtil.searchPosts(this.props.location.query.search_terms);
 	
 	    this.listener = SearchResultsStore.addListener(function () {

@@ -9,7 +9,6 @@ var ApiUtil = {
       method: "GET",
       dataType: "json",
       success: function (response) {
-        console.log("fetchIndex");
         ApiActions.receiveIndex(response);
         // TopicStore.all();
       }
@@ -22,7 +21,6 @@ var ApiUtil = {
       method: "GET",
       dataType: "json",
       success: function (response) {
-        console.log("fetchThread");
         ApiActions.receiveThread(response);
         // TopicStore.all();
       }
@@ -35,7 +33,6 @@ var ApiUtil = {
       method: "GET",
       dataType: "json",
       success: function (response) {
-        console.log(response);
         ApiActions.receiveUsers(response);
       }
     });
@@ -52,7 +49,6 @@ var ApiUtil = {
         }
       },
       success: function (response) {
-        console.log(response);
         ApiActions.receiveSearchResults(response);
       }
     });
@@ -83,7 +79,6 @@ var ApiUtil = {
         }
       },
       success: function (response) {
-        console.log(response);
         ApiActions.receiveUser(response);
       }
     });
@@ -100,7 +95,6 @@ var ApiUtil = {
         }
       },
       success: function (response) {
-        console.log("createThread");
         ApiUtil.createFirstPost(callback, response.topic_id, body)
       }
     });
@@ -136,7 +130,6 @@ var ApiUtil = {
         }
       },
       success: function (response) {
-        console.log('createPost');
         ApiActions.receiveThread(response);
         // TopicStore.all();
       }
@@ -148,7 +141,6 @@ var ApiUtil = {
       url: "session",
       method: "DELETE",
       success: function (response) {
-        console.log("logOut");
         window.location.href = "/";
       }
     });

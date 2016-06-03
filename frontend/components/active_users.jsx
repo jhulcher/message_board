@@ -8,7 +8,7 @@ var ActiveUsers = React.createClass({
   mixins: [History],
 
   handleUserClick: function (id) {
-    this.history.pushState(null, "user", {id: id} );
+    this.history.pushState(null, "user/" + id, {id: id} );
   },
 
   render: function () {

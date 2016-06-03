@@ -49,6 +49,7 @@ var Nav = React.createClass({
           </span>
 
           <span>
+
             <form onSubmit={this.handleSearch}
                   style={{display: "inline"}}>
               <input type="text"
@@ -57,6 +58,7 @@ var Nav = React.createClass({
                      placeholder="Search"
                      valueLink={this.linkState('search_terms')}/>
             </form>
+
           </span>
 
           <span className="l"
