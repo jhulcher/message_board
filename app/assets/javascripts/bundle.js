@@ -49,10 +49,10 @@
 	var ApiUtil = __webpack_require__(159);
 	var ReactRouter = __webpack_require__(184);
 	
-	var User = __webpack_require__(245);
-	var Index = __webpack_require__(235);
-	var Thread = __webpack_require__(237);
-	var NewThread = __webpack_require__(242);
+	var User = __webpack_require__(235);
+	var Index = __webpack_require__(242);
+	var Thread = __webpack_require__(244);
+	var NewThread = __webpack_require__(245);
 	var SearchResults = __webpack_require__(246);
 	var UpdateProfile = __webpack_require__(248);
 	
@@ -80,7 +80,7 @@
 	  React.createElement(IndexRoute, { component: Index }),
 	  React.createElement(Route, { path: 'thread', component: Thread }),
 	  React.createElement(Route, { path: 'new_thread', component: NewThread }),
-	  React.createElement(Route, { path: 'user', component: User }),
+	  React.createElement(Route, { path: 'user/:id', component: User }),
 	  React.createElement(Route, { path: 'search_results', component: SearchResults }),
 	  React.createElement(Route, { path: 'edit_profile', component: UpdateProfile })
 	);
@@ -31483,181 +31483,10 @@
 
 	var ApiUtil = __webpack_require__(159);
 	var TopicStore = __webpack_require__(166);
-	var UsersStore = __webpack_require__(243);
 	var React = __webpack_require__(1);
-	var Nav = __webpack_require__(236);
-	var ActiveUsers = __webpack_require__(244);
-	var LinkedStateMixin = __webpack_require__(238);
-	
-	var cur = window.current_user_id;
-	
-	var History = __webpack_require__(184).History;
-	
-	var Index = React.createClass({
-	  displayName: "Index",
-	
-	
-	  mixins: [LinkedStateMixin, History],
-	
-	  getInitialState: function () {
-	    return { topics: [], users: [], search_terms: "" };
-	  },
-	
-	  componentWillMount: function () {
-	    ApiUtil.fetchIndex();
-	
-	    this.listener = TopicStore.addListener(function () {
-	      this.setState({ topics: TopicStore.all() });
-	    }.bind(this));
-	
-	    ApiUtil.fetchUsers();
-	
-	    this.usersListener = UsersStore.addListener(function () {
-	      this.setState({ users: UserStore.all() });
-	    }.bind(this));
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	    this.usersListener.remove();
-	  },
-	
-	  handleThreadClick: function (id) {
-	    this.history.pushState(null, "thread", { id: id });
-	  },
-	
-	  handleUserClick: function (id) {
-	    this.history.pushState(null, "user", { id: id });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      "div",
-	      null,
-	      React.createElement(Nav, null),
-	      this.state.topics.map(function (topic) {
-	        return React.createElement(
-	          "div",
-	          { key: topic.topic_id },
-	          React.createElement(
-	            "span",
-	            { onClick: this.handleUserClick.bind(null, topic.user_id) },
-	            topic.author
-	          ),
-	          "---",
-	          React.createElement(
-	            "span",
-	            { onClick: this.handleThreadClick.bind(null, topic.topic_id) },
-	            topic.title
-	          ),
-	          "---",
-	          React.createElement(
-	            "span",
-	            null,
-	            topic.created_at
-	          )
-	        );
-	      }.bind(this)),
-	      React.createElement(ActiveUsers, { users: this.state.users })
-	    );
-	  }
-	
-	});
-	
-	module.exports = Index;
-
-/***/ },
-/* 236 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(159);
-	var LinkedStateMixin = __webpack_require__(238);
-	var React = __webpack_require__(1);
-	
-	var History = __webpack_require__(184).History;
-	
-	var Nav = React.createClass({
-	  displayName: 'Nav',
-	
-	
-	  mixins: [History, LinkedStateMixin],
-	
-	  getInitialState: function () {
-	    return { search_terms: "" };
-	  },
-	
-	  goToIndex: function (e) {
-	    e.preventDefault();
-	    this.history.pushState(null, "/");
-	  },
-	
-	  goToNewThread: function (e) {
-	    e.preventDefault();
-	    this.history.pushState(null, "/new_thread");
-	  },
-	
-	  handleLogOut: function (e) {
-	    e.preventDefault();
-	    ApiUtil.logOut();
-	  },
-	
-	  handleSearch: function (e) {
-	    e.preventDefault();
-	    this.history.pushState(null, "search_results", { search_terms: this.state.search_terms });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: '' },
-	      React.createElement(
-	        'span',
-	        { className: '',
-	          onClick: this.goToIndex },
-	        'Index'
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: '',
-	          onClick: this.goToNewThread },
-	        'New Thread'
-	      ),
-	      React.createElement(
-	        'span',
-	        null,
-	        React.createElement(
-	          'form',
-	          { onSubmit: this.handleSearch,
-	            style: { display: "inline" } },
-	          React.createElement('input', { type: 'text',
-	            maxLength: '50',
-	            className: '',
-	            placeholder: 'Search',
-	            valueLink: this.linkState('search_terms') })
-	        )
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'l',
-	          onClick: this.handleLogOut },
-	        'Sign Out'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Nav;
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(159);
-	var TopicStore = __webpack_require__(166);
-	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(238);
-	var Nav = __webpack_require__(236);
+	var LinkedStateMixin = __webpack_require__(236);
+	var Nav = __webpack_require__(240);
+	var UserStore = __webpack_require__(241);
 	
 	var History = __webpack_require__(184).History;
 	
@@ -31670,27 +31499,19 @@
 	  mixins: [LinkedStateMixin, History],
 	
 	  getInitialState: function () {
-	    return { thread: [], content: "" };
+	    return { user: [] };
 	  },
 	
 	  componentWillMount: function () {
-	    ApiUtil.fetchThread(parseInt(this.props.location.query.id));
+	    ApiUtil.fetchUser(parseInt(this.props.location.query.id));
 	
-	    this.threadListener = TopicStore.addListener(function () {
-	      this.setState({ thread: TopicStore.all() });
+	    this.listener = UserStore.addListener(function () {
+	      this.setState({ user: UserStore.all() });
 	    }.bind(this));
 	  },
 	
 	  componentWillUnmount: function () {
-	    this.threadListener.remove();
-	  },
-	
-	  handlePost: function (e) {
-	    e.preventDefault();
-	
-	    ApiUtil.createPost(this.state.thread[0].topic_id, this.state.content);
-	
-	    this.setState({ content: "" });
+	    this.listener.remove();
 	  },
 	
 	  render: function () {
@@ -31698,55 +31519,37 @@
 	      "div",
 	      null,
 	      React.createElement(Nav, null),
-	      this.state.thread.map(function (post) {
+	      this.state.user.map(function (user) {
 	        return React.createElement(
 	          "div",
-	          { key: 999 },
+	          { key: "username" },
 	          React.createElement(
-	            "span",
+	            "div",
 	            null,
-	            post.title
+	            user.username
 	          ),
-	          "---",
 	          React.createElement(
-	            "span",
+	            "div",
 	            null,
-	            post.created_at
+	            user.user_since
 	          ),
-	          post.posts.map(function (post) {
-	            return React.createElement(
-	              "div",
-	              { key: post.post_id + post.topic_id },
-	              React.createElement(
-	                "span",
-	                null,
-	                post.author
-	              ),
-	              "---",
-	              React.createElement(
-	                "span",
-	                null,
-	                post.created_at
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                post.body
-	              )
-	            );
-	          }),
 	          React.createElement(
-	            "form",
-	            { method: "POST",
-	              onSubmit: this.handlePost },
-	            React.createElement("input", { type: "text",
-	              maxLength: "1000",
-	              className: "",
-	              placeholder: "Add a post",
-	              valueLink: this.linkState('content') })
+	            "div",
+	            null,
+	            user.post_count
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            user.location
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            user.about_me
 	          )
 	        );
-	      }.bind(this))
+	      })
 	    );
 	  }
 	
@@ -31755,13 +31558,13 @@
 	module.exports = Thread;
 
 /***/ },
-/* 238 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(239);
+	module.exports = __webpack_require__(237);
 
 /***/ },
-/* 239 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31778,8 +31581,8 @@
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(240);
-	var ReactStateSetters = __webpack_require__(241);
+	var ReactLink = __webpack_require__(238);
+	var ReactStateSetters = __webpack_require__(239);
 	
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -31802,7 +31605,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 240 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31876,7 +31679,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 241 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/**
@@ -31985,14 +31788,376 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var LinkedStateMixin = __webpack_require__(236);
+	var React = __webpack_require__(1);
+	
+	var History = __webpack_require__(184).History;
+	
+	var Nav = React.createClass({
+	  displayName: 'Nav',
+	
+	
+	  mixins: [History, LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return { search_terms: "" };
+	  },
+	
+	  goToIndex: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "/");
+	  },
+	
+	  goToNewThread: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "/new_thread");
+	  },
+	
+	  handleLogOut: function (e) {
+	    e.preventDefault();
+	    ApiUtil.logOut();
+	  },
+	
+	  handleSearch: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "search_results", { search_terms: this.state.search_terms });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: '' },
+	      React.createElement(
+	        'span',
+	        { className: '',
+	          onClick: this.goToIndex },
+	        'Index'
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: '',
+	          onClick: this.goToNewThread },
+	        'New Thread'
+	      ),
+	      React.createElement(
+	        'span',
+	        null,
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.handleSearch,
+	            style: { display: "inline" } },
+	          React.createElement('input', { type: 'text',
+	            maxLength: '50',
+	            className: '',
+	            placeholder: 'Search',
+	            valueLink: this.linkState('search_terms') })
+	        )
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'l',
+	          onClick: this.handleLogOut },
+	        'Sign Out'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Nav;
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(167).Store;
+	var AppDispatcher = __webpack_require__(161);
+	var CONSTANTS = __webpack_require__(165);
+	
+	var _users = [];
+	
+	var UserStore = new Store(AppDispatcher);
+	
+	var resetUsers = function (users) {
+	  _users = users;
+	};
+	
+	UserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case CONSTANTS.USERS_RECEIVED:
+	      resetUsers(payload.users);
+	      UserStore.__emitChange();
+	      break;
+	    case CONSTANTS.USER_RECEIVED:
+	      resetUsers([payload.user]);
+	      UserStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	UserStore.all = function () {
+	  if (_users.length > 1) {
+	    console.log("array");
+	    return _users.slice(0);
+	  } else {
+	    return _users;
+	  }
+	};
+	
+	window.UserStore = UserStore;
+	
+	module.exports = UserStore;
+
+/***/ },
 /* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(159);
 	var TopicStore = __webpack_require__(166);
+	var UsersStore = __webpack_require__(241);
 	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(238);
-	var Nav = __webpack_require__(236);
+	var Nav = __webpack_require__(240);
+	var ActiveUsers = __webpack_require__(243);
+	var LinkedStateMixin = __webpack_require__(236);
+	
+	var cur = window.current_user_id;
+	
+	var History = __webpack_require__(184).History;
+	
+	var Index = React.createClass({
+	  displayName: "Index",
+	
+	
+	  mixins: [LinkedStateMixin, History],
+	
+	  getInitialState: function () {
+	    return { topics: [], users: [], search_terms: "" };
+	  },
+	
+	  componentWillMount: function () {
+	    ApiUtil.fetchIndex();
+	
+	    this.listener = TopicStore.addListener(function () {
+	      this.setState({ topics: TopicStore.all() });
+	    }.bind(this));
+	
+	    ApiUtil.fetchUsers();
+	
+	    this.usersListener = UsersStore.addListener(function () {
+	      this.setState({ users: UserStore.all() });
+	    }.bind(this));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	    this.usersListener.remove();
+	  },
+	
+	  handleThreadClick: function (id) {
+	    this.history.pushState(null, "thread", { id: id });
+	  },
+	
+	  handleUserClick: function (id) {
+	    this.history.pushState(null, "user/" + id, { id: id });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(Nav, null),
+	      this.state.topics.map(function (topic) {
+	        return React.createElement(
+	          "div",
+	          { key: topic.topic_id },
+	          React.createElement(
+	            "span",
+	            { onClick: this.handleUserClick.bind(null, topic.user_id) },
+	            topic.author
+	          ),
+	          "---",
+	          React.createElement(
+	            "span",
+	            { onClick: this.handleThreadClick.bind(null, topic.topic_id) },
+	            topic.title
+	          ),
+	          "---",
+	          React.createElement(
+	            "span",
+	            null,
+	            topic.created_at
+	          )
+	        );
+	      }.bind(this)),
+	      React.createElement(ActiveUsers, { users: this.state.users })
+	    );
+	  }
+	
+	});
+	
+	module.exports = Index;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var React = __webpack_require__(1);
+	
+	var History = __webpack_require__(184).History;
+	
+	var ActiveUsers = React.createClass({
+	  displayName: "ActiveUsers",
+	
+	
+	  mixins: [History],
+	
+	  handleUserClick: function (id) {
+	    this.history.pushState(null, "user", { id: id });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "span",
+	        null,
+	        "Active Users:"
+	      ),
+	      this.props.users.map(function (user) {
+	        return React.createElement(
+	          "span",
+	          { key: user.username,
+	            onClick: this.handleUserClick.bind(null, user.id) },
+	          user.username
+	        );
+	      }.bind(this))
+	    );
+	  }
+	
+	});
+	
+	module.exports = ActiveUsers;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var TopicStore = __webpack_require__(166);
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(236);
+	var Nav = __webpack_require__(240);
+	
+	var History = __webpack_require__(184).History;
+	
+	var cur = window.current_user_id;
+	
+	var Thread = React.createClass({
+	  displayName: "Thread",
+	
+	
+	  mixins: [LinkedStateMixin, History],
+	
+	  getInitialState: function () {
+	    return { thread: [], content: "" };
+	  },
+	
+	  componentWillMount: function () {
+	    ApiUtil.fetchThread(parseInt(this.props.location.query.id));
+	
+	    this.threadListener = TopicStore.addListener(function () {
+	      this.setState({ thread: TopicStore.all() });
+	    }.bind(this));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.threadListener.remove();
+	  },
+	
+	  handlePost: function (e) {
+	    e.preventDefault();
+	
+	    ApiUtil.createPost(this.state.thread[0].topic_id, this.state.content);
+	
+	    this.setState({ content: "" });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(Nav, null),
+	      this.state.thread.map(function (post) {
+	        return React.createElement(
+	          "div",
+	          { key: 999 },
+	          React.createElement(
+	            "span",
+	            null,
+	            post.title
+	          ),
+	          "---",
+	          React.createElement(
+	            "span",
+	            null,
+	            post.created_at
+	          ),
+	          post.posts.map(function (post) {
+	            return React.createElement(
+	              "div",
+	              { key: post.post_id + post.topic_id },
+	              React.createElement(
+	                "span",
+	                null,
+	                post.author
+	              ),
+	              "---",
+	              React.createElement(
+	                "span",
+	                null,
+	                post.created_at
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                post.body
+	              )
+	            );
+	          }),
+	          React.createElement(
+	            "form",
+	            { method: "POST",
+	              onSubmit: this.handlePost },
+	            React.createElement("input", { type: "text",
+	              maxLength: "1000",
+	              className: "",
+	              placeholder: "Add a post",
+	              valueLink: this.linkState('content') })
+	          )
+	        );
+	      }.bind(this))
+	    );
+	  }
+	
+	});
+	
+	module.exports = Thread;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(159);
+	var TopicStore = __webpack_require__(166);
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(236);
+	var Nav = __webpack_require__(240);
 	
 	var History = __webpack_require__(184).History;
 	
@@ -32057,178 +32222,13 @@
 	module.exports = NewThread;
 
 /***/ },
-/* 243 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(167).Store;
-	var AppDispatcher = __webpack_require__(161);
-	var CONSTANTS = __webpack_require__(165);
-	
-	var _users = [];
-	
-	var UserStore = new Store(AppDispatcher);
-	
-	var resetUsers = function (users) {
-	  _users = users;
-	};
-	
-	UserStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case CONSTANTS.USERS_RECEIVED:
-	      resetUsers(payload.users);
-	      UserStore.__emitChange();
-	      break;
-	    case CONSTANTS.USER_RECEIVED:
-	      resetUsers([payload.user]);
-	      UserStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	UserStore.all = function () {
-	  if (_users.length > 1) {
-	    console.log("array");
-	    return _users.slice(0);
-	  } else {
-	    return _users;
-	  }
-	};
-	
-	window.UserStore = UserStore;
-	
-	module.exports = UserStore;
-
-/***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(159);
-	var React = __webpack_require__(1);
-	
-	var History = __webpack_require__(184).History;
-	
-	var ActiveUsers = React.createClass({
-	  displayName: "ActiveUsers",
-	
-	
-	  mixins: [History],
-	
-	  handleUserClick: function (id) {
-	    this.history.pushState(null, "user", { id: id });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      "div",
-	      null,
-	      React.createElement(
-	        "span",
-	        null,
-	        "Active Users:"
-	      ),
-	      this.props.users.map(function (user) {
-	        return React.createElement(
-	          "span",
-	          { key: user.username,
-	            onClick: this.handleUserClick.bind(null, user.id) },
-	          user.username
-	        );
-	      }.bind(this))
-	    );
-	  }
-	
-	});
-	
-	module.exports = ActiveUsers;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(159);
-	var TopicStore = __webpack_require__(166);
-	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(238);
-	var Nav = __webpack_require__(236);
-	var UserStore = __webpack_require__(243);
-	
-	var History = __webpack_require__(184).History;
-	
-	var cur = window.current_user_id;
-	
-	var Thread = React.createClass({
-	  displayName: "Thread",
-	
-	
-	  mixins: [LinkedStateMixin, History],
-	
-	  getInitialState: function () {
-	    return { user: [] };
-	  },
-	
-	  componentWillMount: function () {
-	    ApiUtil.fetchUser(parseInt(this.props.location.query.id));
-	
-	    this.listener = UserStore.addListener(function () {
-	      this.setState({ user: UserStore.all() });
-	    }.bind(this));
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      "div",
-	      null,
-	      React.createElement(Nav, null),
-	      this.state.user.map(function (user) {
-	        return React.createElement(
-	          "div",
-	          { key: "username" },
-	          React.createElement(
-	            "div",
-	            null,
-	            user.username
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            user.user_since
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            user.post_count
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            user.location
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            user.about_me
-	          )
-	        );
-	      })
-	    );
-	  }
-	
-	});
-	
-	module.exports = Thread;
-
-/***/ },
 /* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(159);
 	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(238);
-	var Nav = __webpack_require__(236);
+	var LinkedStateMixin = __webpack_require__(236);
+	var Nav = __webpack_require__(240);
 	var SearchResultsStore = __webpack_require__(247);
 	
 	var History = __webpack_require__(184).History;
@@ -32338,11 +32338,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(159);
-	var LinkedStateMixin = __webpack_require__(238);
+	var LinkedStateMixin = __webpack_require__(236);
 	var React = __webpack_require__(1);
 	var cur = window.current_user_id;
-	var Nav = __webpack_require__(236);
-	var UserStore = __webpack_require__(243);
+	var Nav = __webpack_require__(240);
+	var UserStore = __webpack_require__(241);
 	
 	var History = __webpack_require__(184).History;
 	

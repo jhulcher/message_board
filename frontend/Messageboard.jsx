@@ -31,7 +31,7 @@ var routes = (
     <IndexRoute component={ Index } />
     <Route path="thread" component={ Thread } />
     <Route path="new_thread" component={ NewThread } />
-    <Route path="user" component={ User } />
+    <Route path="user/:id" component={ User } />
     <Route path="search_results" component={ SearchResults } />
     <Route path="edit_profile" component={ UpdateProfile } />
   </Route>

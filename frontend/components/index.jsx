@@ -45,7 +45,7 @@ var Index = React.createClass({
   },
 
   handleUserClick: function (id) {
-    this.history.pushState(null, "user", {id: id} );
+    this.history.pushState(null, "user/" + id, {id: id} );
   },
 
   render: function () {
