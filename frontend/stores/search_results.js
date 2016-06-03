@@ -21,7 +21,6 @@ SearchResultsStore.__onDispatch = function (payload) {
 
 SearchResultsStore.all = function () {
   if (_search_results.length > 1) {
-    console.log("array");
     return _search_results.slice(0);
   } else {
     return _search_results;

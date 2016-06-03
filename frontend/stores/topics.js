@@ -25,7 +25,6 @@ TopicStore.__onDispatch = function (payload) {
 
 TopicStore.all = function () {
   if (_topics.length > 1) {
-    console.log("array");
     return _topics.slice(0);
   } else {
     return _topics;

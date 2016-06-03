@@ -40,6 +40,10 @@ var Thread = React.createClass({
     this.setState({content: ""});
   },
 
+  handleUserClick: function (id) {
+    this.history.pushState(null, "user/" + id, {id: id} );
+  },
+
   render: function () {
     return (
       <div>
@@ -58,7 +62,7 @@ var Thread = React.createClass({
                     post.posts.map (function (post) {
                       return (
                         <div key={post.post_id + post.topic_id}>
-                          <span>
+                          <span onClick={this.handleUserClick.bind(null, post.user_id)}>
                             {post.author}
                           </span>---
                           <span>
@@ -69,7 +73,7 @@ var Thread = React.createClass({
                           </div>
                         </div>
                       )
-                    })
+                    }.bind(this))
                   }
                 <form method="POST"
                       onSubmit={this.handlePost}>

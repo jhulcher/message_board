@@ -19697,7 +19697,6 @@
 	      dataType: "json",
 	      success: function (response) {
 	        ApiActions.receiveIndex(response);
-	        // TopicStore.all();
 	      }
 	    });
 	  },
@@ -19709,7 +19708,6 @@
 	      dataType: "json",
 	      success: function (response) {
 	        ApiActions.receiveThread(response);
-	        // TopicStore.all();
 	      }
 	    });
 	  },
@@ -19747,7 +19745,6 @@
 	      method: "GET",
 	      dataType: "json",
 	      success: function (response) {
-	        console.log(response);
 	        ApiActions.receiveUser(response);
 	      }
 	    });
@@ -19818,7 +19815,6 @@
 	      },
 	      success: function (response) {
 	        ApiActions.receiveThread(response);
-	        // TopicStore.all();
 	      }
 	    });
 	  },
@@ -20249,7 +20245,6 @@
 	
 	TopicStore.all = function () {
 	  if (_topics.length > 1) {
-	    console.log("array");
 	    return _topics.slice(0);
 	  } else {
 	    return _topics;
@@ -31809,6 +31804,11 @@
 	    this.history.pushState(null, "/new_thread");
 	  },
 	
+	  goToEditProfile: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "/edit_profile");
+	  },
+	
 	  handleLogOut: function (e) {
 	    e.preventDefault();
 	    ApiUtil.logOut();
@@ -31834,6 +31834,12 @@
 	        { className: '',
 	          onClick: this.goToNewThread },
 	        'New Thread'
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: '',
+	          onClick: this.goToEditProfile },
+	        'Edit Profile'
 	      ),
 	      React.createElement(
 	        'span',
@@ -32080,6 +32086,10 @@
 	    this.setState({ content: "" });
 	  },
 	
+	  handleUserClick: function (id) {
+	    this.history.pushState(null, "user/" + id, { id: id });
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      "div",
@@ -32106,7 +32116,7 @@
 	              { key: post.post_id + post.topic_id },
 	              React.createElement(
 	                "span",
-	                null,
+	                { onClick: this.handleUserClick.bind(null, post.user_id) },
 	                post.author
 	              ),
 	              "---",
@@ -32121,7 +32131,7 @@
 	                post.body
 	              )
 	            );
-	          }),
+	          }.bind(this)),
 	          React.createElement(
 	            "form",
 	            { method: "POST",
@@ -32222,12 +32232,15 @@
 	var LinkedStateMixin = __webpack_require__(236);
 	var Nav = __webpack_require__(240);
 	var SearchResultsStore = __webpack_require__(247);
+	var History = __webpack_require__(184).History;
 	
 	var cur = window.current_user_id;
 	
 	var SearchResults = React.createClass({
 	  displayName: "SearchResults",
 	
+	
+	  mixins: [History],
 	
 	  getInitialState: function () {
 	    return { posts: [] };
@@ -32244,13 +32257,26 @@
 	  componentWillReceiveProps: function () {
 	    ApiUtil.searchPosts(this.props.location.query.search_terms);
 	
-	    this.listener = SearchResultsStore.addListener(function () {
-	      this.setState({ posts: SearchResultsStore.all() });
+	    this.propListener = SearchResultsStore.addListener(function () {
+	      // this.setState({ posts: SearchResultsStore.all() });
 	    }.bind(this));
 	  },
 	
 	  componentWillUnmount: function () {
-	    this.listener.remove();
+	    if (this.listener) {
+	      this.listener.remove();
+	    }
+	    if (this.propListener) {
+	      this.propListener.remove();
+	    }
+	  },
+	
+	  handleThreadClick: function (id) {
+	    this.history.pushState(null, "thread", { id: id });
+	  },
+	
+	  handleUserClick: function (id) {
+	    this.history.pushState(null, "user/" + id, { id: id });
 	  },
 	
 	  render: function () {
@@ -32264,13 +32290,13 @@
 	          { key: post.body },
 	          React.createElement(
 	            "span",
-	            null,
+	            { onClick: this.handleUserClick.bind(null, post.user_id) },
 	            post.username
 	          ),
 	          React.createElement(
 	            "span",
-	            null,
-	            post.topic_id
+	            { onClick: this.handleThreadClick.bind(null, post.topic_id) },
+	            post.topic_title
 	          ),
 	          React.createElement(
 	            "span",
@@ -32318,7 +32344,6 @@
 	
 	SearchResultsStore.all = function () {
 	  if (_search_results.length > 1) {
-	    console.log("array");
 	    return _search_results.slice(0);
 	  } else {
 	    return _search_results;

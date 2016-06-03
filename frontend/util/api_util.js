@@ -10,7 +10,6 @@ var ApiUtil = {
       dataType: "json",
       success: function (response) {
         ApiActions.receiveIndex(response);
-        // TopicStore.all();
       }
     });
   },
@@ -22,7 +21,6 @@ var ApiUtil = {
       dataType: "json",
       success: function (response) {
         ApiActions.receiveThread(response);
-        // TopicStore.all();
       }
     });
   },
@@ -60,7 +58,6 @@ var ApiUtil = {
       method: "GET",
       dataType: "json",
       success: function (response) {
-        console.log(response);
         ApiActions.receiveUser(response);
       }
     });
@@ -131,7 +128,6 @@ var ApiUtil = {
       },
       success: function (response) {
         ApiActions.receiveThread(response);
-        // TopicStore.all();
       }
     });
   },

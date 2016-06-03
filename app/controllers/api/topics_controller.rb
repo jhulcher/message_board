@@ -2,7 +2,7 @@ class Api::TopicsController < ApplicationController
   before_filter :require_signed_in!
 
   def index
-    @topics = Topic.all
+    @topics = Topic.all.reverse
   end
 
   def show

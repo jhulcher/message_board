@@ -13,12 +13,12 @@ class Api::UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
 
-    if params[:user][:location]
+    if params[:user][:location] != ""
       @user.location = params[:user][:location]
       @user.save!
     end
 
-    if params[:user][:about_me]
+    if params[:user][:about_me] != ""
       @user.about_me = params[:user][:about_me]
       @user.save!
     end

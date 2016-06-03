@@ -24,6 +24,11 @@ var Nav = React.createClass({
     this.history.pushState(null, "/new_thread")
   },
 
+  goToEditProfile: function (e) {
+    e.preventDefault();
+    this.history.pushState(null, "/edit_profile")
+  },
+
   handleLogOut: function (e) {
     e.preventDefault();
     ApiUtil.logOut();
@@ -46,6 +51,11 @@ var Nav = React.createClass({
           <span className=""
                 onClick={this.goToNewThread}>
             New Thread
+          </span>
+
+          <span className=""
+                onClick={this.goToEditProfile}>
+            Edit Profile
           </span>
 
           <span>

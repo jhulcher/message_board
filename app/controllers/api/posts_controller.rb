@@ -27,8 +27,9 @@ class Api::PostsController < ApplicationController
           end
         end
       end
-
     end
+
+    @posts = @posts.reverse
   end
 
   def create
