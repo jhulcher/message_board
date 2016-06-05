@@ -31535,7 +31535,7 @@
 	          React.createElement(
 	            "div",
 	            null,
-	            React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
+	            React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_fill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
 	          ),
 	          React.createElement(
 	            "div",
@@ -32488,7 +32488,7 @@
 	            React.createElement(
 	              "div",
 	              null,
-	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
+	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_fill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
 	            ),
 	            React.createElement(
 	              "div",
