@@ -42,6 +42,9 @@ var Nav = React.createClass({
   render: function () {
     return (
         <div className="nav">
+          <header>
+            Classic Message Board
+          </header>
 
           <span className=""
                 onClick={this.goToIndex}>

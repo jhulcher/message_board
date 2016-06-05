@@ -19723,6 +19723,23 @@
 	    });
 	  },
 	
+	  addPhoto: function (callBack, url, id) {
+	    $.ajax({
+	      url: "/api/users/" + id,
+	      method: "PATCH",
+	      data: {
+	        user: {
+	          public_id: url,
+	          location: "",
+	          about_me: ""
+	        }
+	      },
+	      success: function (response) {
+	        callBack(response);
+	      }
+	    });
+	  },
+	
 	  searchPosts: function (search_terms) {
 	    $.ajax({
 	      url: "api/posts",
@@ -19751,7 +19768,6 @@
 	  },
 	
 	  patchUser: function (id, location, about_me) {
-	    console.log(id);
 	    $.ajax({
 	      url: "api/users/" + id,
 	      method: "PATCH",
@@ -19759,7 +19775,8 @@
 	      data: {
 	        user: {
 	          location: location,
-	          about_me: about_me
+	          about_me: about_me,
+	          public_id: ""
 	        }
 	      },
 	      success: function (response) {
@@ -31518,6 +31535,11 @@
 	          React.createElement(
 	            "div",
 	            null,
+	            React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
 	            user.user_since
 	          ),
 	          React.createElement(
@@ -31824,6 +31846,11 @@
 	      'div',
 	      { className: 'nav' },
 	      React.createElement(
+	        'header',
+	        null,
+	        'Classic Message Board'
+	      ),
+	      React.createElement(
 	        'span',
 	        { className: '',
 	          onClick: this.goToIndex },
@@ -31899,7 +31926,6 @@
 	
 	UserStore.all = function () {
 	  if (_users.length > 1) {
-	    console.log("array");
 	    return _users.slice(0);
 	  } else {
 	    return _users;
@@ -31968,35 +31994,58 @@
 	      "div",
 	      { className: "full-page" },
 	      React.createElement(Nav, null),
-	      this.state.topics.map(function (topic, idx) {
-	        if ((idx + 2) % 2 === 0) {
-	          var colorClass = "list-item beige";
-	        } else {
-	          colorClass = "list-item";
-	        }
-	        return React.createElement(
-	          "div",
-	          { className: colorClass,
-	            key: topic.topic_id },
-	          React.createElement(
-	            "span",
-	            { className: "name-column",
-	              onClick: this.handleUserClick.bind(null, topic.user_id) },
-	            topic.author
-	          ),
-	          React.createElement(
-	            "span",
-	            { className: "title-column",
-	              onClick: this.handleThreadClick.bind(null, topic.topic_id) },
-	            topic.title
-	          ),
-	          React.createElement(
-	            "span",
-	            { className: "date-column" },
-	            topic.created_at
-	          )
-	        );
-	      }.bind(this)),
+	      React.createElement(
+	        "header",
+	        { className: "header-item" },
+	        React.createElement(
+	          "span",
+	          { className: "name-column" },
+	          "Thread Author"
+	        ),
+	        React.createElement(
+	          "span",
+	          { className: "title-column" },
+	          "Thread Title"
+	        ),
+	        React.createElement(
+	          "span",
+	          { className: "date-column" },
+	          "Last Post"
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        null,
+	        this.state.topics.map(function (topic, idx) {
+	          if ((idx + 2) % 2 === 0) {
+	            var colorClass = "list-item beige";
+	          } else {
+	            colorClass = "list-item";
+	          }
+	          return React.createElement(
+	            "div",
+	            { className: colorClass,
+	              key: topic.topic_id },
+	            React.createElement(
+	              "span",
+	              { className: "name-column",
+	                onClick: this.handleUserClick.bind(null, topic.user_id) },
+	              topic.author
+	            ),
+	            React.createElement(
+	              "span",
+	              { className: "title-column",
+	                onClick: this.handleThreadClick.bind(null, topic.topic_id) },
+	              topic.title
+	            ),
+	            React.createElement(
+	              "span",
+	              { className: "date-column" },
+	              topic.created_at
+	            )
+	          );
+	        }.bind(this))
+	      ),
 	      React.createElement(ActiveUsers, { users: this.state.users })
 	    );
 	  }
@@ -32121,13 +32170,17 @@
 	              "div",
 	              { key: post.post_id + post.topic_id },
 	              React.createElement(
-	                "span",
+	                "div",
 	                { onClick: this.handleUserClick.bind(null, post.user_id) },
 	                post.author
 	              ),
-	              "---",
 	              React.createElement(
-	                "span",
+	                "div",
+	                null,
+	                React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_100,w_125/" + post.public_id + ".jpg" })
+	              ),
+	              React.createElement(
+	                "div",
 	                null,
 	                post.created_at
 	              ),
@@ -32365,6 +32418,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(159);
+	var ApiActions = __webpack_require__(160);
 	var LinkedStateMixin = __webpack_require__(236);
 	var React = __webpack_require__(1);
 	var cur = window.current_user_id;
@@ -32374,7 +32428,7 @@
 	var History = __webpack_require__(184).History;
 	
 	var UpdateProfile = React.createClass({
-	  displayName: 'UpdateProfile',
+	  displayName: "UpdateProfile",
 	
 	
 	  mixins: [History, LinkedStateMixin],
@@ -32391,6 +32445,10 @@
 	    }.bind(this));
 	  },
 	
+	  // incomingPic: function (pic) {
+	  //   this.history.push("pic/" + pic.id);
+	  // },
+	
 	  handleUpdateUser: function (e) {
 	    e.preventDefault();
 	    ApiUtil.patchUser(cur, this.state.location, this.state.about_me);
@@ -32401,58 +32459,78 @@
 	    this.listener.remove();
 	  },
 	
+	  upload: function (e) {
+	    e.preventDefault();
+	    cloudinary.openUploadWidget(CLOUDINARY_OPTIONS, function (error, results) {
+	      if (!error) {
+	        ApiUtil.addPhoto(ApiActions.receiveUser, results[0].public_id, cur);
+	      }
+	    }.bind(this));
+	  },
+	
 	  render: function () {
 	    return React.createElement(
-	      'div',
-	      { key: 'editprofile' },
+	      "div",
+	      { key: "editprofile" },
 	      React.createElement(Nav, null),
 	      this.state.user.map(function (user) {
 	        return React.createElement(
-	          'div',
-	          { key: 'editprofile' },
+	          "div",
+	          { key: "editprofile" },
 	          React.createElement(
-	            'div',
+	            "div",
 	            null,
 	            React.createElement(
-	              'div',
+	              "div",
 	              null,
 	              user.username
 	            ),
 	            React.createElement(
-	              'div',
+	              "div",
+	              null,
+	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
+	            ),
+	            React.createElement(
+	              "div",
 	              null,
 	              user.user_since
 	            ),
 	            React.createElement(
-	              'div',
+	              "div",
 	              null,
 	              user.post_count
 	            ),
 	            React.createElement(
-	              'div',
+	              "div",
 	              null,
 	              user.location
 	            ),
 	            React.createElement(
-	              'div',
+	              "div",
 	              null,
 	              user.about_me
 	            )
 	          ),
 	          React.createElement(
-	            'form',
-	            { method: 'POST', onSubmit: this.handleUpdateUser },
-	            React.createElement('input', { type: 'text',
-	              maxLength: '30',
-	              className: '',
-	              placeholder: 'Update Location',
+	            "div",
+	            { className: "",
+	              onClick: this.upload },
+	            "UPLOAD PHOTO"
+	          ),
+	          React.createElement(
+	            "form",
+	            { method: "POST", onSubmit: this.handleUpdateUser },
+	            React.createElement("input", { type: "text",
+	              maxLength: "30",
+	              className: "",
+	              placeholder: "Update Location",
 	              valueLink: this.linkState('location') }),
-	            React.createElement('input', { type: 'text',
-	              maxLength: '200',
-	              className: '',
-	              placeholder: 'Update About Me',
+	            React.createElement("input", { type: "text",
+	              maxLength: "200",
+	              className: "",
+	              placeholder: "Update About Me",
 	              valueLink: this.linkState('about_me') }),
-	            React.createElement('button', { type: 'submit' })
+	            React.createElement("button", { type: "submit" })
 	          )
 	        );
 	      }.bind(this))

@@ -23,6 +23,10 @@ class User < ActiveRecord::Base
     user
   end
 
+  def online?
+    updated_at > 5.minutes.ago
+  end
+
   def password=(password)
     @password = password
     self.password_digest = BCrypt::Password.create(password)

@@ -2,7 +2,8 @@ class Api::TopicsController < ApplicationController
   before_filter :require_signed_in!
 
   def index
-    @topics = Topic.all.reverse
+    # @topics = Topic.all.reverse
+    @topics = Topic.all.sort_by { |topic| topic.posts.last.created_at }.reverse
   end
 
   def show

@@ -44,6 +44,11 @@ var Thread = React.createClass({
                   { user.username }
                 </div>
                 <div>
+                  <img src={"http://res.cloudinary.com/picstagram/image/upload/s-" +
+                    "-cdzgeeOu--/c_lfill,h_200,q_100,w_200/" +
+                    user.public_id + ".jpg"}/>
+                </div>
+                <div>
                   { user.user_since }
                 </div>
                 <div>

@@ -36,6 +36,23 @@ var ApiUtil = {
     });
   },
 
+  addPhoto: function (callBack, url, id) {
+    $.ajax({
+      url: "/api/users/" + id,
+      method: "PATCH",
+      data: {
+        user: {
+          public_id: url,
+          location: "",
+          about_me: ""
+        }
+      },
+      success: function (response) {
+        callBack(response);
+      }
+    });
+  },
+
   searchPosts: function (search_terms) {
     $.ajax({
       url: "api/posts",
@@ -64,7 +81,6 @@ var ApiUtil = {
   },
 
   patchUser: function (id, location, about_me) {
-    console.log(id);
     $.ajax({
       url: "api/users/" + id,
       method: "PATCH",
@@ -72,7 +88,8 @@ var ApiUtil = {
       data: {
         user: {
           location: location,
-          about_me: about_me
+          about_me: about_me,
+          public_id: ""
         }
       },
       success: function (response) {

@@ -1,4 +1,5 @@
 var ApiUtil = require("../util/api_util.js");
+var ApiActions = require("../actions/api_actions.js");
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var React = require('react');
 var cur = window.current_user_id;
@@ -26,6 +27,10 @@ var UpdateProfile = React.createClass({
 
   },
 
+  // incomingPic: function (pic) {
+  //   this.history.push("pic/" + pic.id);
+  // },
+
   handleUpdateUser: function (e) {
     e.preventDefault();
     ApiUtil.patchUser(cur, this.state.location, this.state.about_me);
@@ -34,6 +39,21 @@ var UpdateProfile = React.createClass({
 
   componentWillUnmount: function () {
     this.listener.remove();
+  },
+
+  upload: function (e) {
+    e.preventDefault();
+    cloudinary.openUploadWidget(CLOUDINARY_OPTIONS,
+      function(error, results) {
+        if(!error){
+          ApiUtil.addPhoto(
+            ApiActions.receiveUser,
+            results[0].public_id,
+            cur
+          );
+        }
+      }.bind(this)
+    );
   },
 
   render: function () {
@@ -49,6 +69,11 @@ var UpdateProfile = React.createClass({
                     { user.username }
                   </div>
                   <div>
+                  <img src={"http://res.cloudinary.com/picstagram/image/upload/s-" +
+                    "-cdzgeeOu--/c_lfill,h_200,q_100,w_200/" +
+                    user.public_id + ".jpg"}/>
+                  </div>
+                  <div>
                     { user.user_since }
                   </div>
                   <div>
@@ -60,6 +85,10 @@ var UpdateProfile = React.createClass({
                   <div>
                     { user.about_me }
                   </div>
+                </div>
+                <div className=""
+                   onClick={this.upload}>
+                   UPLOAD PHOTO
                 </div>
                 <form method="POST" onSubmit={this.handleUpdateUser}>
                   <input type="text"

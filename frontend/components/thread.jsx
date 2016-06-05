@@ -62,12 +62,17 @@ var Thread = React.createClass({
                     post.posts.map (function (post) {
                       return (
                         <div key={post.post_id + post.topic_id}>
-                          <span onClick={this.handleUserClick.bind(null, post.user_id)}>
+                          <div onClick={this.handleUserClick.bind(null, post.user_id)}>
                             {post.author}
-                          </span>---
-                          <span>
+                          </div>
+                          <div>
+                            <img src={"http://res.cloudinary.com/picstagram/image/upload/s-" +
+                              "-cdzgeeOu--/c_lfill,h_125,q_100,w_125/" +
+                              post.public_id + ".jpg"}/>
+                          </div>
+                          <div>
                             {post.created_at}
-                          </span>
+                          </div>
                           <div>
                             {post.body}
                           </div>

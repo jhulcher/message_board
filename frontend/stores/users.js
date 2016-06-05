@@ -25,7 +25,6 @@ UserStore.__onDispatch = function (payload) {
 
 UserStore.all = function () {
   if (_users.length > 1) {
-    console.log("array");
     return _users.slice(0);
   } else {
     return _users;

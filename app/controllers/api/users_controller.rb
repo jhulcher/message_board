@@ -2,7 +2,13 @@ class Api::UsersController < ApplicationController
   before_filter :require_signed_in!
 
   def index
-    @users = current_users
+    # @users = current_users
+    users = User.all
+    @users = []
+    users.each do |user|
+      @users << user if user.online?
+    end
+    @users
     # render "json"
   end
 
@@ -12,6 +18,11 @@ class Api::UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
+
+    if params[:user][:public_id] != ""
+      @user.public_id = params[:user][:public_id]
+      @user.save!
+    end
 
     if params[:user][:location] != ""
       @user.location = params[:user][:location]
@@ -28,7 +39,7 @@ class Api::UsersController < ApplicationController
 
   private
   def user_params
-    params.require(:user).permit(:password, :username, :location, :about_me)
+    params.require(:user).permit(:password, :username, :location, :about_me, :public_id)
   end
 
 end

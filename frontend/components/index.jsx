@@ -52,6 +52,18 @@ var Index = React.createClass({
     return (
       <div className="full-page">
         <Nav></Nav>
+        <header className="header-item">
+          <span className="name-column">
+            Thread Author
+          </span>
+          <span className="title-column">
+            Thread Title
+          </span>
+          <span className="date-column">
+            Last Post
+          </span>
+        </header>
+        <div>
           {
             this.state.topics.map (function (topic, idx) {
               if ((idx + 2) % 2 === 0) {
@@ -77,6 +89,7 @@ var Index = React.createClass({
               )
             }.bind(this))
           }
+        </div>
         <ActiveUsers users={ this.state.users }></ActiveUsers>
       </div>
     )
