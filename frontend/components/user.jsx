@@ -38,6 +38,12 @@ var Thread = React.createClass({
         <Nav></Nav>
         {
           this.state.user.map (function (user) {
+            var post_percent = Math.floor(
+                  (100 / user.total_post_count) * user.post_count
+                );
+            var thread_percent = Math.floor(
+                  (100 / user.total_thread_count) * user.thread_count
+                );
             return (
               <div key="username">
                 <div>
@@ -52,13 +58,30 @@ var Thread = React.createClass({
                   { user.user_since }
                 </div>
                 <div>
-                  { user.post_count }
+                  Post Count: { user.post_count }
                 </div>
                 <div>
-                  { user.location }
+                  {post_percent}% of Total Posts
+                </div>
+                <div className="outer-percent">
+                  <div className="inner-percent" style={{width: post_percent + "px"}}>
+                  </div>
                 </div>
                 <div>
-                  { user.about_me }
+                  Thread Count: { user.thread_count }
+                </div>
+                <div>
+                  {thread_percent}% of Total Threads
+                </div>
+                <div className="outer-percent">
+                  <div className="inner-percent" style={{width: thread_percent + "px"}}>
+                  </div>
+                </div>
+                <div>
+                  Location: { user.location }
+                </div>
+                <div>
+                  About Me: { user.about_me }
                 </div>
               </div>
             )

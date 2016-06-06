@@ -31524,6 +31524,8 @@
 	      null,
 	      React.createElement(Nav, null),
 	      this.state.user.map(function (user) {
+	        var post_percent = Math.floor(100 / user.total_post_count * user.post_count);
+	        var thread_percent = Math.floor(100 / user.total_thread_count * user.thread_count);
 	        return React.createElement(
 	          "div",
 	          { key: "username" },
@@ -31545,16 +31547,47 @@
 	          React.createElement(
 	            "div",
 	            null,
+	            "Post Count: ",
 	            user.post_count
 	          ),
 	          React.createElement(
 	            "div",
 	            null,
+	            post_percent,
+	            "% of Total Posts"
+	          ),
+	          React.createElement(
+	            "div",
+	            { className: "outer-percent" },
+	            React.createElement("div", { className: "inner-percent", style: { width: post_percent + "px" } })
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            "Thread Count: ",
+	            user.thread_count
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            thread_percent,
+	            "% of Total Threads"
+	          ),
+	          React.createElement(
+	            "div",
+	            { className: "outer-percent" },
+	            React.createElement("div", { className: "inner-percent", style: { width: thread_percent + "px" } })
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            "Location: ",
 	            user.location
 	          ),
 	          React.createElement(
 	            "div",
 	            null,
+	            "About Me: ",
 	            user.about_me
 	          )
 	        );
@@ -32177,7 +32210,7 @@
 	              React.createElement(
 	                "div",
 	                null,
-	                React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_100,w_125/" + post.public_id + ".jpg" })
+	                React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + post.public_id + ".jpg" })
 	              ),
 	              React.createElement(
 	                "div",

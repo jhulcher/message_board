@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
     user
   end
 
-  def online?
+  def recently_logged_in?
     updated_at > 5.minutes.ago
   end
 

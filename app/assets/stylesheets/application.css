@@ -115,7 +115,18 @@ header span {
   background-color: #f5f5dc;
 }
 
+.outer-percent {
+  height: 15px;
+  width: 100px;
+  background-color: grey;
+}
 
+.inner-percent {
+  height: 15px;
+  float: left;
+  /*width: 10px;*/
+  background-color: green;
+}
 
 
 

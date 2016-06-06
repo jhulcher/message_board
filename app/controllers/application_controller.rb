@@ -7,10 +7,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def current_users
-    @@current_users
-  end
-
   def current_user
     @current_user ||= User.find_by_session_token(session[:session_token])
   end
@@ -21,16 +17,10 @@ class ApplicationController < ActionController::Base
 
   def sign_in(user)
     @current_user = user
-    @@current_users.push(@current_user)
     session[:session_token] = user.reset_token!
   end
 
-  def remove_current_user
-    @@current_users.delete_if { |user| user.id == current_user.id }
-  end
-
   def sign_out
-    remove_current_user
     current_user.try(:reset_token!)
     session[:session_token] = nil
     # redirect_to new_session_url

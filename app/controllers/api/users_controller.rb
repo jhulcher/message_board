@@ -2,14 +2,16 @@ class Api::UsersController < ApplicationController
   before_filter :require_signed_in!
 
   def index
-    # @users = current_users
     users = User.all
     @users = []
+
     users.each do |user|
-      @users << user if user.online?
+      if user.recently_logged_in? || user.posts.last.created_at > 5.minutes.ago
+        @users << user
+      end
     end
+
     @users
-    # render "json"
   end
 
   def show
