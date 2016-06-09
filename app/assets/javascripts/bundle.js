@@ -19802,6 +19802,9 @@
 	  },
 	
 	  createFirstPost: function (callback, id, body) {
+	    if (body === null || body === "") {
+	      body = "...";
+	    }
 	    $.ajax({
 	      url: "/api/posts",
 	      method: "POST",
@@ -31523,75 +31526,85 @@
 	      "div",
 	      null,
 	      React.createElement(Nav, null),
-	      this.state.user.map(function (user) {
-	        var post_percent = Math.floor(100 / user.total_post_count * user.post_count);
-	        var thread_percent = Math.floor(100 / user.total_thread_count * user.thread_count);
-	        return React.createElement(
-	          "div",
-	          { key: "username" },
-	          React.createElement(
+	      React.createElement(
+	        "div",
+	        { className: "profile" },
+	        this.state.user.map(function (user) {
+	          var post_percent = Math.floor(100 / user.total_post_count * user.post_count);
+	          var thread_percent = Math.floor(100 / user.total_thread_count * user.thread_count);
+	          return React.createElement(
 	            "div",
-	            null,
-	            user.username
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_fill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            user.user_since
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            "Post Count: ",
-	            user.post_count
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            post_percent,
-	            "% of Total Posts"
-	          ),
-	          React.createElement(
-	            "div",
-	            { className: "outer-percent" },
-	            React.createElement("div", { className: "inner-percent", style: { width: post_percent + "px" } })
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            "Thread Count: ",
-	            user.thread_count
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            thread_percent,
-	            "% of Total Threads"
-	          ),
-	          React.createElement(
-	            "div",
-	            { className: "outer-percent" },
-	            React.createElement("div", { className: "inner-percent", style: { width: thread_percent + "px" } })
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            "Location: ",
-	            user.location
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            "About Me: ",
-	            user.about_me
-	          )
-	        );
-	      })
+	            { key: "username" },
+	            React.createElement(
+	              "span",
+	              { className: "profile-side" },
+	              React.createElement(
+	                "div",
+	                null,
+	                user.username
+	              ),
+	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + user.public_id + ".jpg"
+	              }),
+	              React.createElement(
+	                "div",
+	                null,
+	                "User Since: ",
+	                user.user_since
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                "Post Count: ",
+	                user.post_count
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                post_percent,
+	                "% of Total Posts"
+	              ),
+	              React.createElement(
+	                "div",
+	                { className: "outer-percent" },
+	                React.createElement("div", { className: "inner-percent", style: { width: post_percent + "px" } })
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                "Thread Count: ",
+	                user.thread_count
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                thread_percent,
+	                "% of Total Threads"
+	              ),
+	              React.createElement(
+	                "div",
+	                { className: "outer-percent" },
+	                React.createElement("div", { className: "inner-percent", style: { width: thread_percent + "px" } })
+	              )
+	            ),
+	            React.createElement(
+	              "span",
+	              { className: "profile-side" },
+	              React.createElement(
+	                "div",
+	                null,
+	                "Location: ",
+	                user.location
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                "About Me: ",
+	                user.about_me
+	              )
+	            )
+	          );
+	        })
+	      )
 	    );
 	  }
 	
@@ -32181,58 +32194,76 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      null,
+	      { className: "full-page" },
 	      React.createElement(Nav, null),
 	      this.state.thread.map(function (post) {
 	        return React.createElement(
 	          "div",
 	          { key: 999 },
 	          React.createElement(
-	            "span",
+	            "header",
 	            null,
 	            post.title
 	          ),
-	          "---",
 	          React.createElement(
-	            "span",
+	            "div",
 	            null,
-	            post.created_at
+	            post.posts.map(function (post, idx) {
+	              if ((idx + 2) % 2 === 0) {
+	                var colorClass = "thread-item beige";
+	              } else {
+	                colorClass = "thread-item";
+	              }
+	              return React.createElement(
+	                "div",
+	                { className: colorClass,
+	                  key: post.post_id + post.topic_id },
+	                React.createElement(
+	                  "span",
+	                  { className: "user-info left" },
+	                  React.createElement(
+	                    "div",
+	                    { onClick: this.handleUserClick.bind(null, post.user_id) },
+	                    post.author
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    null,
+	                    React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + post.public_id + ".jpg" })
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    null,
+	                    "Post Count: ",
+	                    post.post_count
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    null,
+	                    post.created_at
+	                  )
+	                ),
+	                React.createElement(
+	                  "span",
+	                  { className: "post-body left" },
+	                  post.body
+	                )
+	              );
+	            }.bind(this))
 	          ),
-	          post.posts.map(function (post) {
-	            return React.createElement(
-	              "div",
-	              { key: post.post_id + post.topic_id },
-	              React.createElement(
-	                "div",
-	                { onClick: this.handleUserClick.bind(null, post.user_id) },
-	                post.author
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + post.public_id + ".jpg" })
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                post.created_at
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                post.body
-	              )
-	            );
-	          }.bind(this)),
 	          React.createElement(
-	            "form",
-	            { method: "POST",
-	              onSubmit: this.handlePost },
+	            "div",
+	            null,
 	            React.createElement("input", { type: "text",
 	              maxLength: "1000",
 	              className: "",
 	              placeholder: "Add a post",
-	              valueLink: this.linkState('content') })
+	              valueLink: this.linkState('content') }),
+	            React.createElement(
+	              "button",
+	              { onClick: this.handlePost },
+	              "New Post"
+	            )
 	          )
 	        );
 	      }.bind(this))
@@ -32282,8 +32313,8 @@
 	    this.history.push("/");
 	  },
 	
-	  handleCreate: function (e) {
-	    e.preventDefault();
+	  handleCreate: function () {
+	    // e.preventDefault();
 	    ApiUtil.createThread(this.threadCreated, this.state.title, this.state.body);
 	  },
 	
@@ -32293,20 +32324,19 @@
 	      null,
 	      React.createElement(Nav, null),
 	      React.createElement(
-	        "form",
-	        { method: "POST",
-	          onSubmit: this.handleCreate },
+	        "div",
+	        null,
 	        React.createElement("input", { type: "text",
 	          maxLength: "50",
 	          className: "",
-	          placeholder: "Add a post",
+	          placeholder: "Add Title",
 	          valueLink: this.linkState('title') }),
 	        React.createElement("input", { type: "text",
 	          maxLength: "1000",
 	          className: "",
-	          placeholder: "Add a post",
+	          placeholder: "Add Body",
 	          valueLink: this.linkState('body') }),
-	        React.createElement("button", { type: "submit" })
+	        React.createElement("button", { onClick: this.handleCreate })
 	      )
 	    );
 	  }
@@ -32497,6 +32527,7 @@
 	    cloudinary.openUploadWidget(CLOUDINARY_OPTIONS, function (error, results) {
 	      if (!error) {
 	        ApiUtil.addPhoto(ApiActions.receiveUser, results[0].public_id, cur);
+	        this.history.pushState(null, "user/" + cur, { id: cur });
 	      }
 	    }.bind(this));
 	  },
@@ -32521,49 +32552,62 @@
 	            React.createElement(
 	              "div",
 	              null,
-	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_fill,h_200,q_100,w_200/" + user.public_id + ".jpg" })
+	              React.createElement(
+	                "div",
+	                null,
+	                "Current Photo:"
+	              ),
+	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + user.public_id + ".jpg" }),
+	              React.createElement(
+	                "div",
+	                null,
+	                React.createElement(
+	                  "button",
+	                  { className: "",
+	                    onClick: this.upload },
+	                  "Update Photo"
+	                )
+	              )
 	            ),
 	            React.createElement(
 	              "div",
 	              null,
-	              user.user_since
-	            ),
-	            React.createElement(
-	              "div",
-	              null,
-	              user.post_count
-	            ),
-	            React.createElement(
-	              "div",
-	              null,
+	              "Current Location: ",
 	              user.location
 	            ),
 	            React.createElement(
 	              "div",
 	              null,
+	              "Current About Me: ",
 	              user.about_me
 	            )
 	          ),
 	          React.createElement(
 	            "div",
-	            { className: "",
-	              onClick: this.upload },
-	            "UPLOAD PHOTO"
-	          ),
-	          React.createElement(
-	            "form",
-	            { method: "POST", onSubmit: this.handleUpdateUser },
+	            null,
 	            React.createElement("input", { type: "text",
-	              maxLength: "30",
+	              maxLength: "18",
 	              className: "",
 	              placeholder: "Update Location",
-	              valueLink: this.linkState('location') }),
+	              valueLink: this.linkState('location') })
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
 	            React.createElement("input", { type: "text",
 	              maxLength: "200",
 	              className: "",
 	              placeholder: "Update About Me",
-	              valueLink: this.linkState('about_me') }),
-	            React.createElement("button", { type: "submit" })
+	              valueLink: this.linkState('about_me') })
+	          ),
+	          React.createElement(
+	            "div",
+	            null,
+	            React.createElement(
+	              "button",
+	              { onClick: this.handleUpdateUser },
+	              "Update Info"
+	            )
 	          )
 	        );
 	      }.bind(this))

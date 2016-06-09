@@ -51,6 +51,7 @@ var UpdateProfile = React.createClass({
             results[0].public_id,
             cur
           );
+          this.history.pushState(null, "user/" + cur, {id: cur} );
         }
       }.bind(this)
     );
@@ -69,41 +70,46 @@ var UpdateProfile = React.createClass({
                     { user.username }
                   </div>
                   <div>
-                  <img src={"http://res.cloudinary.com/picstagram/image/upload/s-" +
-                    "-cdzgeeOu--/c_fill,h_200,q_100,w_200/" +
-                    user.public_id + ".jpg"}/>
+                    <div>
+                      Current Photo:
+                    </div>
+                    <img src={"http://res.cloudinary.com/picstagram/image/upload/s-" +
+                      "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" +
+                      user.public_id + ".jpg"}>
+                    </img>
+                    <div>
+                      <button className=""
+                         onClick={this.upload}>
+                         Update Photo
+                      </button>
+                    </div>
                   </div>
                   <div>
-                    { user.user_since }
+                    Current Location: { user.location }
                   </div>
                   <div>
-                    { user.post_count }
-                  </div>
-                  <div>
-                    { user.location }
-                  </div>
-                  <div>
-                    { user.about_me }
+                    Current About Me: { user.about_me }
                   </div>
                 </div>
-                <div className=""
-                   onClick={this.upload}>
-                   UPLOAD PHOTO
-                </div>
-                <form method="POST" onSubmit={this.handleUpdateUser}>
+                <div>
                   <input type="text"
-                         maxLength="30"
+                         maxLength="18"
                          className=""
                          placeholder="Update Location"
                          valueLink={this.linkState('location')}/>
+                </div>
+                <div>
                    <input type="text"
                           maxLength="200"
                           className=""
                           placeholder="Update About Me"
                           valueLink={this.linkState('about_me')}/>
-                   <button type="submit" />
-                </form>
-
+                </div>
+                <div>
+                   <button onClick={this.handleUpdateUser}>
+                      Update Info
+                   </button>
+                </div>
               </div>
             )
           }.bind(this))

@@ -33,8 +33,8 @@ var NewThread = React.createClass({
     this.history.push("/");
   },
 
-  handleCreate: function (e) {
-    e.preventDefault();
+  handleCreate: function () {
+    // e.preventDefault();
     ApiUtil.createThread(this.threadCreated, this.state.title, this.state.body);
 
   },
@@ -44,21 +44,19 @@ var NewThread = React.createClass({
       <div>
         <Nav></Nav>
 
-        <form method="POST"
-              onSubmit={this.handleCreate}>
+        <div>
           <input type="text"
                  maxLength="50"
                  className=""
-                 placeholder="Add a post"
+                 placeholder="Add Title"
                  valueLink={this.linkState('title')}/>
            <input type="text"
                   maxLength="1000"
                   className=""
-                  placeholder="Add a post"
+                  placeholder="Add Body"
                   valueLink={this.linkState('body')}/>
-          <button type="submit" />
-        </form>
-
+          <button onClick={this.handleCreate} />
+        </div>
       </div>
     )
   }

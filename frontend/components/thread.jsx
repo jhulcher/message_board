@@ -46,22 +46,28 @@ var Thread = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <div className="full-page">
         <Nav></Nav>
         {
           this.state.thread.map (function (post) {
             return (
               <div key={999}>
-                <span>
+                <header>
                   {post.title}
-                </span>---
-                <span>
-                  {post.created_at}
-                </span>
-                  {
-                    post.posts.map (function (post) {
-                      return (
-                        <div key={post.post_id + post.topic_id}>
+                </header>
+                <div>
+                {
+                  post.posts.map (function (post, idx) {
+                    if ((idx + 2) % 2 === 0) {
+                      var colorClass = "thread-item beige";
+                    } else {
+                          colorClass = "thread-item";
+                    }
+                    return (
+                      <div className={colorClass}
+                           key={post.post_id + post.topic_id}>
+
+                        <span className="user-info left">
                           <div onClick={this.handleUserClick.bind(null, post.user_id)}>
                             {post.author}
                           </div>
@@ -71,24 +77,32 @@ var Thread = React.createClass({
                               post.public_id + ".jpg"}/>
                           </div>
                           <div>
-                            {post.created_at}
+                            Post Count: { post.post_count }
                           </div>
                           <div>
-                            {post.body}
+                            {post.created_at}
                           </div>
-                        </div>
-                      )
-                    }.bind(this))
-                  }
-                <form method="POST"
-                      onSubmit={this.handlePost}>
+                        </span>
+
+                        <span className="post-body left">
+                          {post.body}
+                        </span>
+
+                      </div>
+                    )
+                  }.bind(this))
+                }
+                </div>
+                <div>
                   <input type="text"
                          maxLength="1000"
                          className=""
                          placeholder="Add a post"
                          valueLink={this.linkState('content')}/>
-
-                </form>
+                  <button onClick={this.handlePost}>
+                    New Post
+                  </button>
+                </div>
               </div>
             )
           }.bind(this))

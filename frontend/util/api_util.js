@@ -115,6 +115,9 @@ var ApiUtil = {
   },
 
   createFirstPost: function (callback, id, body) {
+    if (body === null || body === "") {
+      body = "...";
+    }
     $.ajax({
       url: "/api/posts",
       method: "POST",

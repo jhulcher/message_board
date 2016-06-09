@@ -4,6 +4,7 @@ class Api::TopicsController < ApplicationController
   def index
     # @topics = Topic.all.reverse
     @topics = Topic.all.sort_by { |topic| topic.posts.last.created_at }.reverse
+    # @topics = Topic.all
   end
 
   def show

@@ -11,7 +11,8 @@ json.posts @topic.posts do |post|
   json.public_id post.user.public_id
   json.topic_id post.topic_id
   json.post_id post.id
+  json.post_count post.user.posts.count
   json.body post.body
-  json.created_at post.created_at
+  json.created_at (post.created_at.to_time).strftime('%B %e at %l:%M %p')
   json.updated_at post.updated_at
 end

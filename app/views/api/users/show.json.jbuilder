@@ -1,4 +1,4 @@
-  json.user_since @user.created_at.strftime("%b %d, %Y")
+  json.user_since (@user.created_at.to_time).strftime('%B %e at %l:%M %p')
   json.user_id @user.id
   json.username @user.username
   json.public_id @user.public_id
