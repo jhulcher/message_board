@@ -71,21 +71,24 @@ var Thread = React.createClass({
                           <div onClick={this.handleUserClick.bind(null, post.user_id)}>
                             {post.author}
                           </div>
-                          <div>
-                            <img src={"http://res.cloudinary.com/picstagram/image/upload/s-" +
-                              "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" +
-                              post.public_id + ".jpg"}/>
-                          </div>
+                          <img src={"http://res.cloudinary.com/picstagram/image/upload/s-" +
+                            "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" +
+                            post.public_id + ".jpg"}/>
                           <div>
                             Post Count: { post.post_count }
                           </div>
                           <div>
-                            {post.created_at}
+                            Reg: { post.user_since }
                           </div>
                         </span>
 
                         <span className="post-body left">
-                          {post.body}
+                          <div className="date-line">
+                            Posted on {post.created_at}
+                          </div>
+                          <div className="post-text">
+                            {post.body}
+                          </div>
                         </span>
 
                       </div>

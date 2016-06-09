@@ -57,6 +57,7 @@ var SearchResults = React.createClass({
         <Nav></Nav>
         {
           this.state.posts.map (function (post) {
+            var thisText = (post.body).slice(0,29);
             return (
               <div key={post.body}>
                 <span onClick={this.handleUserClick.bind(null, post.user_id)}>
@@ -69,7 +70,7 @@ var SearchResults = React.createClass({
                   {post.created_at}
                 </span>
                 <div>
-                  {post.body}
+                  {thisText}...
                 </div>
               </div>
             )

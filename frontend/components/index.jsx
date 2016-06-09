@@ -62,6 +62,9 @@ var Index = React.createClass({
           <span className="date-column">
             Last Post
           </span>
+          <span className="count-column">
+            Posts
+          </span>
         </header>
         <div>
           {
@@ -84,6 +87,9 @@ var Index = React.createClass({
                   </span>
                   <span className="date-column">
                     {topic.created_at}
+                  </span>
+                  <span className="count-column">
+                    {topic.post_count}
                   </span>
                 </div>
               )

@@ -8,6 +8,7 @@ json.updated_at @post.topic.updated_at
 json.posts @post.topic.posts do |post|
   json.author post.user.username
   json.user_id post.user_id
+  json.user_since (post.user.created_at.to_time).strftime("%m/%d/%Y")
   json.public_id post.user.public_id
   json.post_id post.id
   json.topic_id post.topic_id

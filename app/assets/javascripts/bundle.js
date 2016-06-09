@@ -32057,6 +32057,11 @@
 	          "span",
 	          { className: "date-column" },
 	          "Last Post"
+	        ),
+	        React.createElement(
+	          "span",
+	          { className: "count-column" },
+	          "Posts"
 	        )
 	      ),
 	      React.createElement(
@@ -32088,6 +32093,11 @@
 	              "span",
 	              { className: "date-column" },
 	              topic.created_at
+	            ),
+	            React.createElement(
+	              "span",
+	              { className: "count-column" },
+	              topic.post_count
 	            )
 	          );
 	        }.bind(this))
@@ -32226,11 +32236,7 @@
 	                    { onClick: this.handleUserClick.bind(null, post.user_id) },
 	                    post.author
 	                  ),
-	                  React.createElement(
-	                    "div",
-	                    null,
-	                    React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + post.public_id + ".jpg" })
-	                  ),
+	                  React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + post.public_id + ".jpg" }),
 	                  React.createElement(
 	                    "div",
 	                    null,
@@ -32240,13 +32246,24 @@
 	                  React.createElement(
 	                    "div",
 	                    null,
-	                    post.created_at
+	                    "Reg: ",
+	                    post.user_since
 	                  )
 	                ),
 	                React.createElement(
 	                  "span",
 	                  { className: "post-body left" },
-	                  post.body
+	                  React.createElement(
+	                    "div",
+	                    { className: "date-line" },
+	                    "Posted on ",
+	                    post.created_at
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    { className: "post-text" },
+	                    post.body
+	                  )
 	                )
 	              );
 	            }.bind(this))
@@ -32407,6 +32424,7 @@
 	      null,
 	      React.createElement(Nav, null),
 	      this.state.posts.map(function (post) {
+	        var thisText = post.body.slice(0, 29);
 	        return React.createElement(
 	          "div",
 	          { key: post.body },
@@ -32428,7 +32446,8 @@
 	          React.createElement(
 	            "div",
 	            null,
-	            post.body
+	            thisText,
+	            "..."
 	          )
 	        );
 	      }.bind(this))
