@@ -43,42 +43,39 @@ var Nav = React.createClass({
     return (
         <div className="nav">
           <header>
-            Classic Message Board
+            Message Board
           </header>
+          <div className="nav-center">
+            <span onClick={this.goToIndex}>
+              Index
+            </span>
 
-          <span className=""
-                onClick={this.goToIndex}>
-            Index
-          </span>
+            <span onClick={this.goToNewThread}>
+              New Thread
+            </span>
 
-          <span className=""
-                onClick={this.goToNewThread}>
-            New Thread
-          </span>
+            <span onClick={this.goToEditProfile}>
+              Edit Profile
+            </span>
 
-          <span className=""
-                onClick={this.goToEditProfile}>
-            Edit Profile
-          </span>
+            <span>
 
-          <span>
+              <form onSubmit={this.handleSearch}
+                    style={{display: "inline"}}>
+                <input type="text"
+                       maxLength="50"
+                       className=""
+                       placeholder="Search"
+                       valueLink={this.linkState('search_terms')}/>
+              </form>
 
-            <form onSubmit={this.handleSearch}
-                  style={{display: "inline"}}>
-              <input type="text"
-                     maxLength="50"
-                     className=""
-                     placeholder="Search"
-                     valueLink={this.linkState('search_terms')}/>
-            </form>
+            </span>
 
-          </span>
-
-          <span className="l"
-              onClick={this.handleLogOut}>
-            Sign Out
-          </span>
-
+            <span className="l"
+                onClick={this.handleLogOut}>
+              Sign Out
+            </span>
+          </div>
         </div>
     );
   }

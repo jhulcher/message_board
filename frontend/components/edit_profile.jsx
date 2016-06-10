@@ -59,8 +59,13 @@ var UpdateProfile = React.createClass({
 
   render: function () {
     return (
-      <div key="editprofile">
+      <div key="editprofile" className="full-page">
+      <div className="frame">
+
         <Nav></Nav>
+        <div className="header-item">
+          Edit Profile
+        </div>
         {
           this.state.user.map (function (user) {
             return (
@@ -114,6 +119,7 @@ var UpdateProfile = React.createClass({
             )
           }.bind(this))
         }
+        </div>
       </div>
     )
   }

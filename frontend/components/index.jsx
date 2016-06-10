@@ -51,6 +51,7 @@ var Index = React.createClass({
   render: function () {
     return (
       <div className="full-page">
+        <div className="frame">
         <Nav></Nav>
         <header className="header-item">
           <span className="name-column">
@@ -97,6 +98,7 @@ var Index = React.createClass({
           }
         </div>
         <ActiveUsers users={ this.state.users }></ActiveUsers>
+        </div>
       </div>
     )
   }

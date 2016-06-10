@@ -53,29 +53,59 @@ var SearchResults = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <div className="full-page">
+        <div className="frame">
         <Nav></Nav>
+        <div className="header-item">
+          Search Results
+        </div>
+        <header className="header-item">
+          <span className="name-column">
+            Thread Author
+          </span>
+          <span className="search-title-column">
+            Thread Title
+          </span>
+          <span className="search-date-column">
+            Posted At
+          </span>
+          <span className="search-post-column">
+            Post
+          </span>
+        </header>
         {
-          this.state.posts.map (function (post) {
-            var thisText = (post.body).slice(0,29);
+          this.state.posts.map (function (post, idx) {
+            if ((idx + 2) % 2 === 0) {
+              var colorClass = "list-item beige";
+            } else {
+                  colorClass = "list-item";
+            }
+            var thisText = (post.body).slice(0,29) + "...";
             return (
-              <div key={post.body}>
-                <span onClick={this.handleUserClick.bind(null, post.user_id)}>
+              <div  className={colorClass}
+                    key={post.body}>
+                <span className="name-column"
+                      onClick={this.handleUserClick.bind(null, post.user_id)}>
                   {post.username}
                 </span>
-                <span onClick={this.handleThreadClick.bind(null, post.topic_id)}>
+                <span className="search-title-column"
+                      onClick={this.handleThreadClick.bind(null, post.topic_id)}>
                   {post.topic_title}
                 </span>
-                <span>
-                  {post.created_at}
+                <span className="search-date-column">
+                  { post.created_at }
                 </span>
-                <div>
-                  {thisText}...
-                </div>
+                <span className="search-post-column">
+                  { thisText }
+                </span>
               </div>
+
+
+
             )
           }.bind(this))
         }
+        </div>
       </div>
     )
   }

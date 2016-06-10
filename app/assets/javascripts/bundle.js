@@ -31524,86 +31524,99 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      null,
-	      React.createElement(Nav, null),
+	      { className: "full-page" },
 	      React.createElement(
 	        "div",
-	        { className: "profile" },
-	        this.state.user.map(function (user) {
-	          var post_percent = Math.floor(100 / user.total_post_count * user.post_count);
-	          var thread_percent = Math.floor(100 / user.total_thread_count * user.thread_count);
-	          return React.createElement(
+	        { className: "frame" },
+	        React.createElement(Nav, null),
+	        React.createElement(
+	          "div",
+	          { className: "header-item" },
+	          "User Profile"
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "user-page" },
+	          React.createElement(
 	            "div",
-	            { key: "username" },
-	            React.createElement(
-	              "span",
-	              { className: "profile-side" },
-	              React.createElement(
+	            { className: "profile" },
+	            this.state.user.map(function (user) {
+	              var post_percent = Math.floor(100 / user.total_post_count * user.post_count);
+	              var thread_percent = Math.floor(100 / user.total_thread_count * user.thread_count);
+	              return React.createElement(
 	                "div",
-	                null,
-	                user.username
-	              ),
-	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + user.public_id + ".jpg"
-	              }),
-	              React.createElement(
-	                "div",
-	                null,
-	                "User Since: ",
-	                user.user_since
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                "Post Count: ",
-	                user.post_count
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                post_percent,
-	                "% of Total Posts"
-	              ),
-	              React.createElement(
-	                "div",
-	                { className: "outer-percent" },
-	                React.createElement("div", { className: "inner-percent", style: { width: post_percent + "px" } })
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                "Thread Count: ",
-	                user.thread_count
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                thread_percent,
-	                "% of Total Threads"
-	              ),
-	              React.createElement(
-	                "div",
-	                { className: "outer-percent" },
-	                React.createElement("div", { className: "inner-percent", style: { width: thread_percent + "px" } })
-	              )
-	            ),
-	            React.createElement(
-	              "span",
-	              { className: "profile-side" },
-	              React.createElement(
-	                "div",
-	                null,
-	                "Location: ",
-	                user.location
-	              ),
-	              React.createElement(
-	                "div",
-	                null,
-	                "About Me: ",
-	                user.about_me
-	              )
-	            )
-	          );
-	        })
+	                { key: "username" },
+	                React.createElement(
+	                  "span",
+	                  { className: "profile-side" },
+	                  React.createElement(
+	                    "div",
+	                    { className: "username" },
+	                    user.username
+	                  ),
+	                  React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + user.public_id + ".jpg"
+	                  }),
+	                  React.createElement(
+	                    "div",
+	                    { className: "profile-since" },
+	                    "User Since: ",
+	                    user.user_since
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    { className: "profile-line" },
+	                    "Post Count: ",
+	                    user.post_count
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    null,
+	                    post_percent,
+	                    "% of Total Posts"
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    { className: "outer-percent" },
+	                    React.createElement("div", { className: "inner-percent", style: { width: post_percent + "px" } })
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    { className: "profile-line" },
+	                    "Thread Count: ",
+	                    user.thread_count
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    null,
+	                    thread_percent,
+	                    "% of Total Threads"
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    { className: "outer-percent" },
+	                    React.createElement("div", { className: "inner-percent", style: { width: thread_percent + "px" } })
+	                  )
+	                ),
+	                React.createElement(
+	                  "span",
+	                  { className: "profile-side" },
+	                  React.createElement(
+	                    "div",
+	                    { className: "profile-about" },
+	                    "Location: ",
+	                    user.location
+	                  ),
+	                  React.createElement(
+	                    "div",
+	                    { className: "profile-about" },
+	                    "About Me: ",
+	                    user.about_me
+	                  )
+	                )
+	              );
+	            })
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -31894,45 +31907,46 @@
 	      React.createElement(
 	        'header',
 	        null,
-	        'Classic Message Board'
+	        'Message Board'
 	      ),
 	      React.createElement(
-	        'span',
-	        { className: '',
-	          onClick: this.goToIndex },
-	        'Index'
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: '',
-	          onClick: this.goToNewThread },
-	        'New Thread'
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: '',
-	          onClick: this.goToEditProfile },
-	        'Edit Profile'
-	      ),
-	      React.createElement(
-	        'span',
-	        null,
+	        'div',
+	        { className: 'nav-center' },
 	        React.createElement(
-	          'form',
-	          { onSubmit: this.handleSearch,
-	            style: { display: "inline" } },
-	          React.createElement('input', { type: 'text',
-	            maxLength: '50',
-	            className: '',
-	            placeholder: 'Search',
-	            valueLink: this.linkState('search_terms') })
+	          'span',
+	          { onClick: this.goToIndex },
+	          'Index'
+	        ),
+	        React.createElement(
+	          'span',
+	          { onClick: this.goToNewThread },
+	          'New Thread'
+	        ),
+	        React.createElement(
+	          'span',
+	          { onClick: this.goToEditProfile },
+	          'Edit Profile'
+	        ),
+	        React.createElement(
+	          'span',
+	          null,
+	          React.createElement(
+	            'form',
+	            { onSubmit: this.handleSearch,
+	              style: { display: "inline" } },
+	            React.createElement('input', { type: 'text',
+	              maxLength: '50',
+	              className: '',
+	              placeholder: 'Search',
+	              valueLink: this.linkState('search_terms') })
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'l',
+	            onClick: this.handleLogOut },
+	          'Sign Out'
 	        )
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'l',
-	          onClick: this.handleLogOut },
-	        'Sign Out'
 	      )
 	    );
 	  }
@@ -32039,70 +32053,74 @@
 	    return React.createElement(
 	      "div",
 	      { className: "full-page" },
-	      React.createElement(Nav, null),
-	      React.createElement(
-	        "header",
-	        { className: "header-item" },
-	        React.createElement(
-	          "span",
-	          { className: "name-column" },
-	          "Thread Author"
-	        ),
-	        React.createElement(
-	          "span",
-	          { className: "title-column" },
-	          "Thread Title"
-	        ),
-	        React.createElement(
-	          "span",
-	          { className: "date-column" },
-	          "Last Post"
-	        ),
-	        React.createElement(
-	          "span",
-	          { className: "count-column" },
-	          "Posts"
-	        )
-	      ),
 	      React.createElement(
 	        "div",
-	        null,
-	        this.state.topics.map(function (topic, idx) {
-	          if ((idx + 2) % 2 === 0) {
-	            var colorClass = "list-item beige";
-	          } else {
-	            colorClass = "list-item";
-	          }
-	          return React.createElement(
-	            "div",
-	            { className: colorClass,
-	              key: topic.topic_id },
-	            React.createElement(
-	              "span",
-	              { className: "name-column",
-	                onClick: this.handleUserClick.bind(null, topic.user_id) },
-	              topic.author
-	            ),
-	            React.createElement(
-	              "span",
-	              { className: "title-column",
-	                onClick: this.handleThreadClick.bind(null, topic.topic_id) },
-	              topic.title
-	            ),
-	            React.createElement(
-	              "span",
-	              { className: "date-column" },
-	              topic.created_at
-	            ),
-	            React.createElement(
-	              "span",
-	              { className: "count-column" },
-	              topic.post_count
-	            )
-	          );
-	        }.bind(this))
-	      ),
-	      React.createElement(ActiveUsers, { users: this.state.users })
+	        { className: "frame" },
+	        React.createElement(Nav, null),
+	        React.createElement(
+	          "header",
+	          { className: "header-item" },
+	          React.createElement(
+	            "span",
+	            { className: "name-column" },
+	            "Thread Author"
+	          ),
+	          React.createElement(
+	            "span",
+	            { className: "title-column" },
+	            "Thread Title"
+	          ),
+	          React.createElement(
+	            "span",
+	            { className: "date-column" },
+	            "Last Post"
+	          ),
+	          React.createElement(
+	            "span",
+	            { className: "count-column" },
+	            "Posts"
+	          )
+	        ),
+	        React.createElement(
+	          "div",
+	          null,
+	          this.state.topics.map(function (topic, idx) {
+	            if ((idx + 2) % 2 === 0) {
+	              var colorClass = "list-item beige";
+	            } else {
+	              colorClass = "list-item";
+	            }
+	            return React.createElement(
+	              "div",
+	              { className: colorClass,
+	                key: topic.topic_id },
+	              React.createElement(
+	                "span",
+	                { className: "name-column",
+	                  onClick: this.handleUserClick.bind(null, topic.user_id) },
+	                topic.author
+	              ),
+	              React.createElement(
+	                "span",
+	                { className: "title-column",
+	                  onClick: this.handleThreadClick.bind(null, topic.topic_id) },
+	                topic.title
+	              ),
+	              React.createElement(
+	                "span",
+	                { className: "date-column" },
+	                topic.created_at
+	              ),
+	              React.createElement(
+	                "span",
+	                { className: "count-column" },
+	                topic.post_count
+	              )
+	            );
+	          }.bind(this))
+	        ),
+	        React.createElement(ActiveUsers, { users: this.state.users })
+	      )
 	    );
 	  }
 	
@@ -32205,85 +32223,89 @@
 	    return React.createElement(
 	      "div",
 	      { className: "full-page" },
-	      React.createElement(Nav, null),
-	      this.state.thread.map(function (post) {
-	        return React.createElement(
-	          "div",
-	          { key: 999 },
-	          React.createElement(
-	            "header",
-	            null,
-	            post.title
-	          ),
-	          React.createElement(
+	      React.createElement(
+	        "div",
+	        { className: "frame" },
+	        React.createElement(Nav, null),
+	        this.state.thread.map(function (post) {
+	          return React.createElement(
 	            "div",
-	            null,
-	            post.posts.map(function (post, idx) {
-	              if ((idx + 2) % 2 === 0) {
-	                var colorClass = "thread-item beige";
-	              } else {
-	                colorClass = "thread-item";
-	              }
-	              return React.createElement(
-	                "div",
-	                { className: colorClass,
-	                  key: post.post_id + post.topic_id },
-	                React.createElement(
-	                  "span",
-	                  { className: "user-info left" },
-	                  React.createElement(
-	                    "div",
-	                    { onClick: this.handleUserClick.bind(null, post.user_id) },
-	                    post.author
-	                  ),
-	                  React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + post.public_id + ".jpg" }),
-	                  React.createElement(
-	                    "div",
-	                    null,
-	                    "Post Count: ",
-	                    post.post_count
-	                  ),
-	                  React.createElement(
-	                    "div",
-	                    null,
-	                    "Reg: ",
-	                    post.user_since
-	                  )
-	                ),
-	                React.createElement(
-	                  "span",
-	                  { className: "post-body left" },
-	                  React.createElement(
-	                    "div",
-	                    { className: "date-line" },
-	                    "Posted on ",
-	                    post.created_at
-	                  ),
-	                  React.createElement(
-	                    "div",
-	                    { className: "post-text" },
-	                    post.body
-	                  )
-	                )
-	              );
-	            }.bind(this))
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            React.createElement("input", { type: "text",
-	              maxLength: "1000",
-	              className: "",
-	              placeholder: "Add a post",
-	              valueLink: this.linkState('content') }),
+	            { key: 999 },
 	            React.createElement(
-	              "button",
-	              { onClick: this.handlePost },
-	              "New Post"
+	              "header",
+	              { className: "header-item thread-title" },
+	              post.title
+	            ),
+	            React.createElement(
+	              "div",
+	              null,
+	              post.posts.map(function (post, idx) {
+	                if ((idx + 2) % 2 === 0) {
+	                  var colorClass = "thread-item beige";
+	                } else {
+	                  colorClass = "thread-item";
+	                }
+	                return React.createElement(
+	                  "div",
+	                  { className: colorClass,
+	                    key: post.post_id + post.topic_id },
+	                  React.createElement(
+	                    "span",
+	                    { className: "user-info left" },
+	                    React.createElement(
+	                      "div",
+	                      { onClick: this.handleUserClick.bind(null, post.user_id) },
+	                      post.author
+	                    ),
+	                    React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + post.public_id + ".jpg" }),
+	                    React.createElement(
+	                      "div",
+	                      null,
+	                      "Post Count: ",
+	                      post.post_count
+	                    ),
+	                    React.createElement(
+	                      "div",
+	                      null,
+	                      "Reg: ",
+	                      post.user_since
+	                    )
+	                  ),
+	                  React.createElement(
+	                    "span",
+	                    { className: "post-body left" },
+	                    React.createElement(
+	                      "div",
+	                      { className: "date-line" },
+	                      "Posted on ",
+	                      post.created_at
+	                    ),
+	                    React.createElement(
+	                      "div",
+	                      { className: "post-text" },
+	                      post.body
+	                    )
+	                  )
+	                );
+	              }.bind(this))
+	            ),
+	            React.createElement(
+	              "div",
+	              null,
+	              React.createElement("input", { type: "text",
+	                maxLength: "1000",
+	                className: "",
+	                placeholder: "Add a post",
+	                valueLink: this.linkState('content') }),
+	              React.createElement(
+	                "button",
+	                { onClick: this.handlePost },
+	                "New Post"
+	              )
 	            )
-	          )
-	        );
-	      }.bind(this))
+	          );
+	        }.bind(this))
+	      )
 	    );
 	  }
 	
@@ -32338,22 +32360,31 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      null,
-	      React.createElement(Nav, null),
+	      { className: "full-page" },
 	      React.createElement(
 	        "div",
-	        null,
-	        React.createElement("input", { type: "text",
-	          maxLength: "50",
-	          className: "",
-	          placeholder: "Add Title",
-	          valueLink: this.linkState('title') }),
-	        React.createElement("input", { type: "text",
-	          maxLength: "1000",
-	          className: "",
-	          placeholder: "Add Body",
-	          valueLink: this.linkState('body') }),
-	        React.createElement("button", { onClick: this.handleCreate })
+	        { className: "frame" },
+	        React.createElement(Nav, null),
+	        React.createElement(
+	          "div",
+	          { className: "header-item" },
+	          "New Thread"
+	        ),
+	        React.createElement(
+	          "div",
+	          null,
+	          React.createElement("input", { type: "text",
+	            maxLength: "50",
+	            className: "",
+	            placeholder: "Add Title",
+	            valueLink: this.linkState('title') }),
+	          React.createElement("input", { type: "text",
+	            maxLength: "1000",
+	            className: "",
+	            placeholder: "Add Body",
+	            valueLink: this.linkState('body') }),
+	          React.createElement("button", { onClick: this.handleCreate })
+	        )
 	      )
 	    );
 	  }
@@ -32421,36 +32452,76 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      null,
-	      React.createElement(Nav, null),
-	      this.state.posts.map(function (post) {
-	        var thisText = post.body.slice(0, 29);
-	        return React.createElement(
+	      { className: "full-page" },
+	      React.createElement(
+	        "div",
+	        { className: "frame" },
+	        React.createElement(Nav, null),
+	        React.createElement(
 	          "div",
-	          { key: post.body },
+	          { className: "header-item" },
+	          "Search Results"
+	        ),
+	        React.createElement(
+	          "header",
+	          { className: "header-item" },
 	          React.createElement(
 	            "span",
-	            { onClick: this.handleUserClick.bind(null, post.user_id) },
-	            post.username
+	            { className: "name-column" },
+	            "Thread Author"
 	          ),
 	          React.createElement(
 	            "span",
-	            { onClick: this.handleThreadClick.bind(null, post.topic_id) },
-	            post.topic_title
+	            { className: "search-title-column" },
+	            "Thread Title"
 	          ),
 	          React.createElement(
 	            "span",
-	            null,
-	            post.created_at
+	            { className: "search-date-column" },
+	            "Posted At"
 	          ),
 	          React.createElement(
-	            "div",
-	            null,
-	            thisText,
-	            "..."
+	            "span",
+	            { className: "search-post-column" },
+	            "Post"
 	          )
-	        );
-	      }.bind(this))
+	        ),
+	        this.state.posts.map(function (post, idx) {
+	          if ((idx + 2) % 2 === 0) {
+	            var colorClass = "list-item beige";
+	          } else {
+	            colorClass = "list-item";
+	          }
+	          var thisText = post.body.slice(0, 29) + "...";
+	          return React.createElement(
+	            "div",
+	            { className: colorClass,
+	              key: post.body },
+	            React.createElement(
+	              "span",
+	              { className: "name-column",
+	                onClick: this.handleUserClick.bind(null, post.user_id) },
+	              post.username
+	            ),
+	            React.createElement(
+	              "span",
+	              { className: "search-title-column",
+	                onClick: this.handleThreadClick.bind(null, post.topic_id) },
+	              post.topic_title
+	            ),
+	            React.createElement(
+	              "span",
+	              { className: "search-date-column" },
+	              post.created_at
+	            ),
+	            React.createElement(
+	              "span",
+	              { className: "search-post-column" },
+	              thisText
+	            )
+	          );
+	        }.bind(this))
+	      )
 	    );
 	  }
 	
@@ -32554,82 +32625,91 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      { key: "editprofile" },
-	      React.createElement(Nav, null),
-	      this.state.user.map(function (user) {
-	        return React.createElement(
+	      { key: "editprofile", className: "full-page" },
+	      React.createElement(
+	        "div",
+	        { className: "frame" },
+	        React.createElement(Nav, null),
+	        React.createElement(
 	          "div",
-	          { key: "editprofile" },
-	          React.createElement(
+	          { className: "header-item" },
+	          "Edit Profile"
+	        ),
+	        this.state.user.map(function (user) {
+	          return React.createElement(
 	            "div",
-	            null,
-	            React.createElement(
-	              "div",
-	              null,
-	              user.username
-	            ),
+	            { key: "editprofile" },
 	            React.createElement(
 	              "div",
 	              null,
 	              React.createElement(
 	                "div",
 	                null,
-	                "Current Photo:"
+	                user.username
 	              ),
-	              React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + user.public_id + ".jpg" }),
 	              React.createElement(
 	                "div",
 	                null,
 	                React.createElement(
-	                  "button",
-	                  { className: "",
-	                    onClick: this.upload },
-	                  "Update Photo"
+	                  "div",
+	                  null,
+	                  "Current Photo:"
+	                ),
+	                React.createElement("img", { src: "http://res.cloudinary.com/picstagram/image/upload/s-" + "-cdzgeeOu--/c_lfill,h_125,q_85,w_125/" + user.public_id + ".jpg" }),
+	                React.createElement(
+	                  "div",
+	                  null,
+	                  React.createElement(
+	                    "button",
+	                    { className: "",
+	                      onClick: this.upload },
+	                    "Update Photo"
+	                  )
 	                )
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                "Current Location: ",
+	                user.location
+	              ),
+	              React.createElement(
+	                "div",
+	                null,
+	                "Current About Me: ",
+	                user.about_me
 	              )
 	            ),
 	            React.createElement(
 	              "div",
 	              null,
-	              "Current Location: ",
-	              user.location
+	              React.createElement("input", { type: "text",
+	                maxLength: "18",
+	                className: "",
+	                placeholder: "Update Location",
+	                valueLink: this.linkState('location') })
 	            ),
 	            React.createElement(
 	              "div",
 	              null,
-	              "Current About Me: ",
-	              user.about_me
-	            )
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            React.createElement("input", { type: "text",
-	              maxLength: "18",
-	              className: "",
-	              placeholder: "Update Location",
-	              valueLink: this.linkState('location') })
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
-	            React.createElement("input", { type: "text",
-	              maxLength: "200",
-	              className: "",
-	              placeholder: "Update About Me",
-	              valueLink: this.linkState('about_me') })
-	          ),
-	          React.createElement(
-	            "div",
-	            null,
+	              React.createElement("input", { type: "text",
+	                maxLength: "200",
+	                className: "",
+	                placeholder: "Update About Me",
+	                valueLink: this.linkState('about_me') })
+	            ),
 	            React.createElement(
-	              "button",
-	              { onClick: this.handleUpdateUser },
-	              "Update Info"
+	              "div",
+	              null,
+	              React.createElement(
+	                "button",
+	                { onClick: this.handleUpdateUser },
+	                "Update Info"
+	              )
 	            )
-	          )
-	        );
-	      }.bind(this))
+	          );
+	        }.bind(this))
+	      )
 	    );
 	  }
 	

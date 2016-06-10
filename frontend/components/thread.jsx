@@ -47,12 +47,14 @@ var Thread = React.createClass({
   render: function () {
     return (
       <div className="full-page">
+      <div className="frame">
+
         <Nav></Nav>
         {
           this.state.thread.map (function (post) {
             return (
               <div key={999}>
-                <header>
+                <header className="header-item thread-title">
                   {post.title}
                 </header>
                 <div>
@@ -110,6 +112,7 @@ var Thread = React.createClass({
             )
           }.bind(this))
         }
+        </div>
       </div>
     )
   }

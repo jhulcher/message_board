@@ -41,9 +41,13 @@ var NewThread = React.createClass({
 
   render: function () {
     return (
-      <div>
-        <Nav></Nav>
+      <div className="full-page">
+      <div className="frame">
 
+        <Nav></Nav>
+        <div className="header-item">
+          New Thread
+        </div>
         <div>
           <input type="text"
                  maxLength="50"
@@ -56,6 +60,7 @@ var NewThread = React.createClass({
                   placeholder="Add Body"
                   valueLink={this.linkState('body')}/>
           <button onClick={this.handleCreate} />
+        </div>
         </div>
       </div>
     )
